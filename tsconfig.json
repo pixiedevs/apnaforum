@@ -1,0 +1,23 @@
+{
+    // "extends": "./nuxt/tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@/components/*": ["components/*"],
+            "@/composables/*": ["composables/*"],
+            "@/models/*": ["models/*"],
+            "@/helpers/*": ["helpers/*"],
+            "@/assets/*": ["assets/*"],
+        },
+        "allowJs": true
+    },
+    "include": [
+        "env.d.ts",
+        ".nuxt/nuxt.d.ts",
+        "models/*.ts",
+        "**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
