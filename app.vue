@@ -11,7 +11,13 @@
 
   <MainToast />
   <Footer />
-
+  <ClientOnly>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe
+        :src="'https://www.googletagmanager.com/ns.html?id='+runtimeConfig.public.gtagid"
+        height="0" width="0" class="hide"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  </ClientOnly>
 </template>
 
 <script setup>
@@ -65,10 +71,12 @@ onMounted(() => {
 .page-leave-active {
   transition: all .2s;
 }
+
 .page-enter-from,
 .page-leave-to {
   opacity: .2;
 }
+
 #main-loading {
   top: 2px;
   position: fixed;

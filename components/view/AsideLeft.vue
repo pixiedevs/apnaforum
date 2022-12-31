@@ -8,8 +8,9 @@ import ForumListComponent from "@/components/view/ForumList.vue";
 
 <template>
     <aside class="aside-left card-bg">
-
-        <AuthUserProfile class='mt-5 mx-auto text-center' />
+        <ClientOnly>
+            <AuthUserProfile class='mt-5 mx-auto text-center' />
+        </ClientOnly>
 
         <div class="text-center">
             <button class="small mx-5" @click="showAllToasts()">Show

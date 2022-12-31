@@ -33,7 +33,7 @@ const doCallback = () => {
                     Link</button>
                 <button class='button button-clear row'>Report</button>
                 <ButtonIfAuthor class='button button-clear row'
-                    :author="reply.authorUsername"
+                    :author="reply.authorUsername" :moderator="true"
                     @click="deleteReply(reply.id)">Delete</ButtonIfAuthor>
             </div>
         </div>

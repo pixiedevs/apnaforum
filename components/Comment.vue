@@ -37,7 +37,7 @@ const doCallback = () => {
                 <ButtonIfAuthor class='button button-clear row' :author="author"
                     @click="markUserful(comment.id)">Useful</ButtonIfAuthor>
                 <ButtonIfAuthor class='button button-clear row'
-                    :author="comment.authorUsername"
+                    :author="comment.authorUsername" :moderator="true"
                     @click="deleteComment(comment.id)">Delete</ButtonIfAuthor>
             </div>
         </div>
