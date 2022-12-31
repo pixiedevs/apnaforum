@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nativeFetch } from '@/helpers/api';
+import { nativeFetch2 } from '@/helpers/api';
 // import { showToast } from '@/helpers/appState';
 
 
@@ -12,7 +12,7 @@ const likeCount = ref<number>(count)
 
 const doLike = () => {
 
-    nativeFetch(`api/action/`, { query: `&action=like&to=${to}&id=${toId}`, method: likeModel.value ? 'DELETE' : 'GET', auth: true })
+    nativeFetch2(`api/action/`, `&action=like&to=${to}&id=${toId}`, likeModel.value ? 'DELETE' : 'GET')
         .then((res) => res.json())
         .then((data) => {
             if (data.message.tag === 'success') {

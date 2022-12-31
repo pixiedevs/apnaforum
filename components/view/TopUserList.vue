@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { nativeFetch } from "@/helpers/api";
+import { getPersistData, setPersistData } from "@/helpers/cookie";
 import { UserShort } from "@/models/User";
 
 const users = ref<UserShort[]>([])
 
 onMounted(() => {
-    nativeFetch('/api/users-top/')
+    if (getPersistData('users-top')) {
+        users.value = getPersistData('users-top')
+    } else {
+            nativeFetch('/api/users-top/')
         .then((res) => res.json())
         .then((data) => {
             users.value = data.users
-            // pendingComments.value = false
+            setPersistData('users-top', data.users)
+
         })
         .catch((err) => { })
+    }
 })
 
 </script>

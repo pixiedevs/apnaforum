@@ -8,13 +8,15 @@ const showToast = (desc: string, tag = "info", milisec = 0, actions?: { name: st
         toasts.value.splice(i)
     }
     toasts.value.push({ show: true, desc, tag, actions })
-    const index = toasts.value.length - 1
     if (milisec > 0) {
         setTimeout(() => {
-            toasts.value[index].show = false
+            i = toasts.value.findIndex((t) => { if (t.desc === desc) return t })
+            if (i >= 0)
+                toasts.value[i].show = false
             setTimeout(() => {
                 i = toasts.value.findIndex((t) => { if (t.desc === desc) return t })
-                toasts.value.splice(i)
+                if (i >= 0)
+                    toasts.value.splice(i)
             }, 500);
         }, milisec);
     }

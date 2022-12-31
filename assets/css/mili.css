@@ -1520,6 +1520,42 @@ kbd {
 .w-100 {
     width: 100%
 }
+.hm-100v {
+    min-height: 100vh
+}
+
+.wm-100v {
+    min-width: 100vw
+}
+.h-80 {
+    height: 80%
+}
+
+.w-80 {
+    width: 80%
+}
+
+.hm-80v {
+    min-height: 80vh
+}
+
+.wm-80v {
+    min-width: 80vw
+}
+.h-50 {
+    height: 50%
+}
+
+.w-50 {
+    width: 50%
+}
+.hm-50v {
+    min-height: 50vh
+}
+
+.wm-50v {
+    min-width: 50vw
+}
 
 .text-center {
     text-align: center;

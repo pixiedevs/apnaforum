@@ -45,22 +45,22 @@ const usePostFetch = async (path = '/', formData: FormData, method: string = 'PO
 }
 
 /* The path must not start with '/' and data string must be start with & */
-const dataFetch = <T>(path = '/', data: { query: string, method: string, auth: boolean } = { query: '', method: 'GET', auth: true }) => {
-    const options = _getFullPathAndHeader(path, data.auth)
+const dataFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
+    const options = _getFullPathAndHeader(path, auth)
 
-    return useFetch<T>(`${options.path}?res_type=api${data.query}`, {
-        method: data.method,
+    return useFetch<T>(`${options.path}?res_type=api${query}`, {
+        method: method,
         credentials: 'same-origin',
         headers: options.header
     });
 }
 
 /* The path must not start with '/' and data string must be start with & */
-const nativeFetch = (path = '/', data: { query: string, method: string, auth: boolean } = { query: '', method: 'GET', auth: true }) => {
-    const options = _getFullPathAndHeader(path, data.auth)
+const nativeFetch = (path = '/', query = '', method = 'GET', auth = true) => {
+    const options = _getFullPathAndHeader(path, auth)
 
-    return fetch(`${options.path}?res_type=api${data.query}`, {
-        method: data.method,
+    return fetch(`${options.path}?res_type=api${query}`, {
+        method: method,
         credentials: 'same-origin',
         headers: options.header
     });

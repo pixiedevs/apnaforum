@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
-import { markToHtml } from "@/helpers/input";
-import Comment from "@/models/Comment"
-import ReplyComponent from "@/components/ReplyComponent.vue"
-import { nativeFetch } from "@/helpers/api";
-import { showToast } from "@/helpers/appState";
+import ReplyComponent from "@/components/Reply.vue"
+import ButtonIfAuth from "@/components/ButtonIfAuth.vue"
+import ButtonIfAuthor from "@/components/ButtonIfAuthor.vue"
 
-const authUser = useAuthUser()
+import Comment from "@/models/Comment"
+
+import { markToHtml } from "@/helpers/input";
+import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
+import { deleteComment } from "@/helpers/topicServices";
 
 const { comment, replyCallback, topicIsActive } = defineProps<{
     comment: Comment,
@@ -19,18 +20,6 @@ const { comment, replyCallback, topicIsActive } = defineProps<{
 const doCallback = () => {
     replyCallback(comment.id.toString(), 'comment', comment.body.substring(0, 50))
 }
-const deleteComment = () => {
-    nativeFetch('/api/1comments/delete', { query: `&comment-id=${comment.id}`, method: 'DELETE', auth: true })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.message) {
-                showToast(data.message.desc, data.message.tag, 5000)
-            }
-        }).catch((err) => {
-            // console.log(err);
-            showToast("Unable to delete comment!", "error", 5000)
-        });
-}
 
 </script>
 
@@ -38,18 +27,18 @@ const deleteComment = () => {
     <div class="card comment m-2" :id="'comment-' + comment.id">
         <div class="cont-menu shadow">
             <div>
-                <button class='button button-clear row' @click="doCallback()"
-                    :disabled="!topicIsActive">Reply</button>
+                <ButtonIfAuth class='button button-clear row'
+                    @click="doCallback()" v-if="topicIsActive">Reply
+                </ButtonIfAuth>
                 <button class='button button-clear row'
                     @click="copyTextWithMsg(getFullPath() + '#comment-' + comment.id, 'Link copied to clipboard')">Copy
                     Link</button>
                 <button class='button button-clear row'>Report</button>
-                <button class='button button-clear row'
-                    v-if="authUser.auth && authUser.username == author"
-                    @click="markUserful(comment.id)">Useful</button>
-                <button class='button button-clear row'
-                    v-if="authUser.username == comment.authorUsername || ['moderator', 'staff', 'admin'].includes(authUser.isa)"
-                    @click="showToast('Are you sure to delete this comment?', 'warning', 10000, [{ name: 'DELETE', do: deleteComment }])">Delete</button>
+                <ButtonIfAuthor class='button button-clear row' :author="author"
+                    @click="markUserful(comment.id)">Useful</ButtonIfAuthor>
+                <ButtonIfAuthor class='button button-clear row'
+                    :author="comment.authorUsername"
+                    @click="deleteComment(comment.id)">Delete</ButtonIfAuthor>
             </div>
         </div>
         <div class="row">

@@ -69,4 +69,20 @@ onMounted(() => {
 .page-leave-to {
   opacity: .2;
 }
+#main-loading {
+  top: 2px;
+  position: fixed;
+  margin-left: 1%;
+  margin-right: 1%;
+  border-radius: 50%;
+  background: transparent;
+  width: 98%;
+  height: 0.4rem;
+  z-index: 98
+}
+
+#main-loading.show {
+  animation: shimmer 1s linear infinite forwards;
+  background: linear-gradient(90deg, var(--primary-bg2), var(--primary-bg), var(--secondary-bg2))
+}
 </style>

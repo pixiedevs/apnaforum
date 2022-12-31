@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import TopicCardList from "@/components/TopicCardList.vue"
 import { dataFetch } from "@/helpers/api";
-import { TopicShort } from "@/models/Topic";
+import { TopicBase } from "@/models/Topic";
 
 useHead({
 	title: 'Home'
 })
 
-const { data: topicsData, error, pending } = dataFetch<{ topics: TopicShort[] }>('/api/topics/?res_type=api')
+const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>('/api/topics/')
 
 </script>
 

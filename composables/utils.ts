@@ -9,5 +9,6 @@ export const getRoutes = () => {
         { name: 'Home', path: '/' },
         { name: 'Topics', path: '/topics/' },
         { name: 'Add Topic', path: '/add-topic/' },
+        { name: 'Sign up', path: '/signup/' },
     ]
-} 
+}

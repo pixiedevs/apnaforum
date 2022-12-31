@@ -106,14 +106,21 @@
     transform: rotate(90deg);
 }
 
+.cont-menu>*::before {
+    content: 'Menu:';
+    border-bottom: var(--border);
+}
+
 .cont-menu>* {
+    border-bottom: var(--border);
+    border-top: var(--border);
     display: none;
     position: absolute;
-    right: .5rem;
-    top: -.5rem;
+    right: 2rem;
+    top: 2.5rem;
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
-    padding: .5rem 2rem;
+    padding: 1rem 2rem 0 2rem;
     z-index: 1;
 }
 

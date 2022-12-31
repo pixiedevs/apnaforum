@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import ButtonIfAuth from "@/components/ButtonIfAuth.vue"
+import ButtonIfAuthor from "@/components/ButtonIfAuthor.vue"
+
+import Reply from "@/models/Reply"
+
 import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
 import { markToHtml } from "@/helpers/input";
-import Reply from "@/models/Reply"
+import { deleteReply } from "@/helpers/topicServices";
 
 const { reply, replyCallback, topicIsActive } = defineProps<{
     reply: Reply,
@@ -9,11 +14,10 @@ const { reply, replyCallback, topicIsActive } = defineProps<{
     topicIsActive: boolean
 }>()
 
+
 const doCallback = () => {
     replyCallback(reply.id.toString(), 'reply', reply.body.substring(0, 50))
 }
-
-
 
 </script>
 
@@ -21,12 +25,16 @@ const doCallback = () => {
     <div class="card reply m-2" :id="'reply-' + reply.id">
         <div class="cont-menu shadow">
             <div>
-                <button class='button button-clear row' @click="doCallback()"
-                    :disabled="!topicIsActive">Reply</button>
+                <ButtonIfAuth class='button button-clear row'
+                    @click="doCallback()" v-if="topicIsActive">Reply
+                </ButtonIfAuth>
                 <button class='button button-clear row'
                     @click="copyTextWithMsg(getFullPath() + '#reply-' + reply.id, 'Link copied to clipboard')">Copy
                     Link</button>
                 <button class='button button-clear row'>Report</button>
+                <ButtonIfAuthor class='button button-clear row'
+                    :author="reply.authorUsername"
+                    @click="deleteReply(reply.id)">Delete</ButtonIfAuthor>
             </div>
         </div>
         <div class="row">
@@ -37,13 +45,13 @@ const doCallback = () => {
                         {{ reply.reply_of.username }}</small>
                 </NuxtLink>
 
-                <!-- <div class="card-text md-html" v-md-to-html="reply.body"></div> -->
                 <div class="card-text md-html" v-html="markToHtml(reply.body)">
                 </div>
                 <hr class="small" />
 
                 <small class="card-details pe-4 flex-wrap">
-                    <NuxtLink class="route" :to="`/u/${reply.authorUsername}/`"><span
+                    <NuxtLink class="route" :to="`/u/${reply.authorUsername}/`">
+                        <span
                             class="card-author">{{ reply.authorUsername }}</span>
                     </NuxtLink>
                     <span class="card-time">{{ reply.time.asTime() }}</span>

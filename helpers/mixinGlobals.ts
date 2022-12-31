@@ -22,7 +22,7 @@ String.prototype.asTime = function () {
     let str = this.toString()
     try {
         const t = new Date(str)
-        return t.toLocaleTimeString("en-IN", { "hour": "numeric", "minute": "numeric" }).toString() + " - " +
+        return t.toLocaleTimeString("en-IN", { "hour": "numeric", "minute": "numeric" }).toString().toUpperCase() + " - " +
             t.toLocaleDateString("en-IN", {
                 "year": "numeric",
                 "month": "short",

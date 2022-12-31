@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import TopicViewComponent from "@/components/TopicViewComponent.vue"
-import CommentComponent from "@/components/CommentComponent.vue"
-import AddCommentComponent from "@/components/AddCommentComponent.vue"
-import AddReplyComponent from "@/components/AddReplyComponent.vue"
+import TopicViewComponent from "@/components/TopicView.vue"
+import CommentComponent from "@/components/Comment.vue"
+import AddCommentComponent from "@/components/AddComment.vue"
+import AddReplyComponent from "@/components/AddReply.vue"
 
 import { dataFetch, nativeFetch } from "@/helpers/api";
 import { Topic } from "@/models/Topic";
@@ -22,7 +22,7 @@ const { data: topicData, pending, error: error } = dataFetch<{ topic: Topic }>(`
 
 const fetchCommentData = () => {
 	pendingComments.value = true
-	nativeFetch(`/api/topics/${route.params.slug}/`, { query: '&res=comments', method: 'GET', auth: true })
+	nativeFetch(`/api/topics/${route.params.slug}/`, '&res=comments', 'GET')
 		.then((res) => res.json())
 		.then((data) => {
 			comments.value = data.comments
@@ -46,7 +46,7 @@ onMounted(() => {
 })
 
 const markUserful = (commentId: number) => {
-	console.log("markUseful ", commentId);	
+	console.log("markUseful ", commentId);
 }
 
 
@@ -80,18 +80,19 @@ const markUserful = (commentId: number) => {
 						title="Topic closed because of no activity from 15 days."
 						class="topic-view-status closed">CLOSED</span>
 
-					<!-- <ClientOnly> -->
-						<span v-once>{{ topicData.topic.time.asTime() }}</span>
-					<!-- </ClientOnly> -->
+					<ClientOnly>
+						<span>{{ topicData.topic.time.asTime() }}</span>
+					</ClientOnly>
 				</div>
 			</div>
 
-			<TopicViewComponent :topic="topicData.topic" callback="" />
+			<TopicViewComponent :topic="topicData.topic" callback=""
+				:commentsCount="pendingComments ? 0 : comments.length" />
 
 			<!-- <ClientOnly> -->
-				<AddCommentComponent v-if="topicData.topic.isactive"
-					:slug="topicData.topic.slug"
-					:refreshComments="fetchCommentData" />
+			<AddCommentComponent v-if="topicData.topic.isactive"
+				:slug="topicData.topic.slug"
+				:refreshComments="fetchCommentData" />
 			<!-- </ClientOnly> -->
 
 			<div v-if="pendingComments" id="comments">
@@ -101,25 +102,26 @@ const markUserful = (commentId: number) => {
 				<h2>Unable to get comments!</h2>
 			</div>
 
-			<div class="card-group hover-light" id="comments" v-else>
+			<div class="card-group hover-light" id="comments"
+				v-else-if="topicData.topic.isactive">
 				<!-- <ClientOnly> -->
-					<CommentComponent v-for="comment of comments"
-						:key="comment.id" :replyCallback="addReplyCB"
-						:topicIsActive="topicData.topic.isactive"
-						:author="topicData.topic.authorUsername"
-						:comment="comment" :markUserful="markUserful" />
+				<CommentComponent v-for="comment of comments" :key="comment.id"
+					:replyCallback="addReplyCB"
+					:topicIsActive="topicData.topic.isactive"
+					:author="topicData.topic.authorUsername" :comment="comment"
+					:markUserful="markUserful" />
 				<!-- </ClientOnly> -->
 			</div>
 
 		</section>
 
-		<section>
+		<section v-if="topicData.topic.isactive">
 			<div class='modal'
 				:class="{ 'show': floatReply, 'hidden': !floatReply }">
 				<span class="close close-top"
 					@click="floatReply = !floatReply"></span>
 				<!-- <ClientOnly> -->
-					<AddReplyComponent :refreshComments="fetchCommentData" />
+				<AddReplyComponent :refreshComments="fetchCommentData" />
 				<!-- </ClientOnly> -->
 			</div>
 		</section>

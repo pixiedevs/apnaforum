@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import { TopicShort } from "@/models/Topic";
+import { TopicBase } from "@/models/Topic";
 
 defineProps({
-    topics: Array<TopicShort>,
+    topics: Array<TopicBase>,
 })
 
 </script>
 
 <template>
-    <div class="container-lg m-auto">
+    <div class="container-lg" v-once>
         <NuxtLink class="outline-off2" :to="'/topics/' + topic.slug"
             v-for="topic of topics" :key="topic.slug">
-            <div class="card col pointer my-3 shadow border-x"
-                :key="topic.slug">
+            <div class="card col pointer shadow border-x my-3 py-2">
                 <strong class="card-title mb-1"> {{ topic.name }} </strong>
                 <div class="d-flex justify-content-between">
-                    <!-- <ClientOnly> -->
+                    <ClientOnly>
                         <small>{{ topic.authorName.asTitle() }}</small>
                         <small>{{ topic.time.asTime() }}</small>
-                    <!-- </ClientOnly> -->
+                    </ClientOnly>
                     <small>Likes: {{ topic.likes }}</small>
                 </div>
             </div>

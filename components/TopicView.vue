@@ -1,34 +1,23 @@
 <script setup lang="ts">
+import Like from "@/components/Like.vue";
+
 import { Topic } from "@/models/Topic"
-import LikeComponent from "@/components/LikeComponent.vue";
+
 import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
 import { markToHtml } from "@/helpers/input";
-import { nativeFetch } from "@/helpers/api";
-import { showToast } from "@/helpers/appState";
+import { deleteTopic } from "@/helpers/topicServices";
 
-const { topic } = defineProps<{ topic: Topic }>()
+const { topic } = defineProps<{ topic: Topic, commentsCount: number }>()
 
 const authUser = useAuthUser()
 
 const vMdToHtml = {
+    created(el, binding) {
+        el.innerHTML = binding.value;
+    },
     mounted(el, binding) {
         el.innerHTML = markToHtml(binding.value);
     }
-}
-
-const deleteTopic = () => {
-    nativeFetch('/api/topics/delete', { query: `&topic-slug=${topic.slug}`, method: 'DELETE', auth: true })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.message) {
-                showToast(data.message.desc, data.message.tag, 5000)
-                if (data.message.tag === "success") {
-                    useRouter().back()
-                }
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
 }
 
 </script>
@@ -43,7 +32,7 @@ const deleteTopic = () => {
                 <button class='button button-clear row'>Report</button>
                 <button class='button button-clear row'
                     v-if="authUser.username == topic.authorUsername || ['moderator', 'staff', 'admin'].includes(authUser.isa)"
-                    @click="showToast('Are you sure to delete this topic?', 'warning', 10000, [{ name: 'DELETE', do: deleteTopic }])">Delete</button>
+                    @click="deleteTopic(topic.slug)">Delete</button>
                 <NuxtLink class="route"
                     :to="'/update-topic/?topic=' + topic.slug">
                     <button class='button button-clear row'
@@ -58,14 +47,16 @@ const deleteTopic = () => {
                     <span class="card-author">{{ topic.authorUsername }}</span>
                 </NuxtLink>
                 <div class="card-text md-html" v-md-to-html="topic.body" v-once>
-                    {{ topic.body }}
                 </div>
             </div>
         </div>
-        <div class="interaction mx-3">
+        <div class="interaction mx-5">
             <div>
-                <LikeComponent :isLiked="topic.isLiked" :toId="topic.slug"
+                <Like :isLiked="topic.isLiked" :toId="topic.slug"
                     :count="topic.likes" />
+            </div>
+            <div>
+                <span>{{ commentsCount }} Comments</span>
             </div>
         </div>
     </div>

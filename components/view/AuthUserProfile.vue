@@ -1,12 +1,12 @@
 <template>
-    <div class='m-5'>
+    <div>
 
         <div class="p-2" v-if="authUser.auth">
             <div>
                 User: <strong>{{ authUser.username }}</strong>
             </div>
-            <div v-if="authUser.isa !== 'user'" class='p-2'>
-                Type: <strong>{{ authUser.isa }}</strong>
+            <div v-if="authUser.isa !== 'user'">
+                <small>Type: </small><strong>{{ authUser.isa }}</strong>
             </div>
         </div>
 

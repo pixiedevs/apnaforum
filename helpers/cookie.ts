@@ -25,8 +25,28 @@ const deleteCookie = (name: string, doc: Document = document) => {
     setCookieValue(name, '', -1)
 }
 
+const getPersistData = (key: string, persist = true) => {
+    try {
+        if (persist)
+            return JSON.parse(getCookie("ps:".concat(key)))
+        else
+            return JSON.parse(sessionStorage.getItem("ps:".concat(key))).value
+    } catch (er) {
+        return false
+    }
+}
+
+const setPersistData = (key: string, value: any, minutes = 60, persist = true) => {
+    if (persist)
+        document.cookie = `ps:${key}=${JSON.stringify(value)}; domain=${document.location.hostname}; max-age=${minutes * 60}; path=/;`
+    else
+        sessionStorage.setItem("ps:".concat(key), JSON.stringify({ value, time: new Date().toString() }))
+}
+
 export {
     getCookie,
     setCookieValue,
-    deleteCookie
+    deleteCookie,
+    getPersistData,
+    setPersistData,
 }
