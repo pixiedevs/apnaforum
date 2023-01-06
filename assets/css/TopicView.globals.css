@@ -57,6 +57,7 @@
 .reply .card-text,
 .comment .card-text {
     max-height: 70vh;
+    word-wrap: break-word;
     overflow-x: hidden;
     overflow-y: visible;
     padding: 1rem;
@@ -75,12 +76,14 @@
 .comment.answer {
     margin-top: 2.5rem !important;
 }
+
 .comment.answer button.useful:before {
     content: 'Not ';
     margin-right: 1ch;
     font-size: smaller;
     color: red;
 }
+
 .comment.answer:before {
     content: 'Answer';
     position: absolute;
@@ -92,10 +95,12 @@
     text-shadow: 4px 2px 2px black;
     transition: var(--transition);
 }
+
 .comment.answer:hover:before {
     letter-spacing: .5ch;
     color: currentColor;
 }
+
 /* right: 0;
 transform: translate(1.5rem, 4rem) rotate(90deg); */
 

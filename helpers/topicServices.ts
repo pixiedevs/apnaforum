@@ -30,7 +30,7 @@ const deleteService = (to: string, query: string, id: number, onSuccess?: Functi
                 showToast(data.message.desc, data.message.tag, 5000)
                 if (onSuccess && data.message.tag === "success") {
                     onSuccess()
-                    if (id && (to === 'reply' || to === 'comment')) {
+                    if (to === 'reply' || to === 'comment') {
                         document.querySelector(`#${to}-${id} .card-text`).innerHTML = '[DELETED]'
                     }
                 }
