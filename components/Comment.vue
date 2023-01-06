@@ -18,7 +18,7 @@ const { comment, replyCallback, topicIsActive } = defineProps<{
 }>()
 
 const doCallback = () => {
-    replyCallback(comment.id.toString(), 'comment', comment.body.substring(0, 50))
+    replyCallback(comment.id.toString(), 'comment', comment.body.substring(0, 50), comment.id)
 }
 
 </script>
@@ -30,13 +30,14 @@ const doCallback = () => {
                 <ButtonIfAuth class='button button-clear row'
                     @click="doCallback()" v-if="topicIsActive">Reply
                 </ButtonIfAuth>
-                <button class='button button-clear row'
-                    @click="copyTextWithMsg(getFullPath() + '#comment-' + comment.id, 'Link copied to clipboard')">Copy
-                    Link</button>
-                <button class='button button-clear row'>Report</button>
-                <ButtonIfAuthor class='button button-clear row' :author="author"
+                <button class='button button-clear row' @click="copyTextWithMsg(getFullPath() + '#comment-' + comment.id,
+    'Link copied to clipboard')">Copy Link</button>
+                <ButtonIfAuth class='button button-clear row'>Report
+                </ButtonIfAuth>
+                <ButtonIfAuthor class='button button-clear row useful' :author="author"
                     @click="markUserful(comment.id)">Useful</ButtonIfAuthor>
                 <ButtonIfAuthor class='button button-clear row'
+                    v-if="comment.body !== '[DELETED]'"
                     :author="comment.authorUsername" :moderator="true"
                     @click="deleteComment(comment.id)">Delete</ButtonIfAuthor>
             </div>
@@ -61,6 +62,6 @@ const doCallback = () => {
 
         <ReplyComponent v-for="reply in comment.replies" :key="reply.id"
             :reply="reply" :replyCallback="replyCallback"
-            :topicIsActive="topicIsActive" />
+            :topicIsActive="topicIsActive" :commentId="comment.id" />
     </div>
 </template>

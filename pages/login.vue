@@ -14,8 +14,7 @@ const handleLogin = (e) => {
     const formData = new FormData(e.target)
 
     startLoading(2000)
-    usePostFetch(`/api/token/`, formData, 'POST')
-        .then((res) => res.json())
+    usePostFetch(`/token/`, formData, 'POST')
         .then((data) => {
             if (data.access) {
                 setCookieValue("sessiona", data.access, 5)
@@ -25,7 +24,7 @@ const handleLogin = (e) => {
                 stopLoading()
                 router.back()
             } else {
-                throw new Error("")
+                throw new Error()
             }
         })
         .catch((err) => {
@@ -42,7 +41,7 @@ const handleLogin = (e) => {
             <h1>Login</h1>
         </div>
 
-        <div id="login" class="card-bg rounded shadow py-5 px-2 pb-0 m-auto">
+        <div id="login" class="rounded py-5 px-2 pb-0 mx-auto mt-5">
             <form @submit.prevent="handleLogin">
                 <div class="container">
                     <label>Username: <input type="text"
@@ -55,6 +54,8 @@ const handleLogin = (e) => {
                         <button class="small" type="button"
                             @click="router.back()">Cancel</button>
                     </div>
+                    <p class="text-center mt-3">* New user *</p>
+                    <div class="text-center mt-3"><NuxtLink :to="'/signup/'"><button class="small" type="button">Signup</button></NuxtLink></div>
                 </div>
             </form>
         </div>

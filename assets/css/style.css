@@ -21,6 +21,7 @@
   --text-color-tr: #ffffff55;
   --border-radius: 5px;
   --navbar-height: 2rem;
+  --transition: .5s;
 }
 
 html {
@@ -246,8 +247,20 @@ main {
 
 .close.close-top::after {
   position: absolute;
-  top: 1.5rem;
   right: 50%;
+  background-color: var(--secondary-bg2);
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.close.close-bg::after {
+  background-color: var(--secondary-bg2);
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  border-radius: var(--border-radius);
 }
 
 .close::after {
@@ -256,7 +269,6 @@ main {
   display: block;
   width: 1rem;
   height: 1rem;
-  line-height: 1rem;
   font-size: 2rem;
   text-shadow: 2px 2px 2px black;
 }
@@ -264,6 +276,10 @@ main {
 /* .modal:not(.show) {
   display: none;
 } */
+.opacity-low {
+  opacity: .2;
+}
+
 .modal.show {
   position: fixed;
   width: clamp(200px, 100%, 98vw);
@@ -275,7 +291,6 @@ main {
   z-index: 98;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 @keyframes entry-down {
@@ -292,11 +307,15 @@ main {
 
 .heading h1 {
   margin-top: 2rem;
+  font-size: xx-large;
 }
 
 .heading .topic-view-title {
   font-weight: bolder;
-  /* line-height: 1ch; */
+}
+
+.upper-first::first-letter {
+  text-transform: uppercase;
 }
 
 .pointer {
@@ -390,6 +409,7 @@ a:where(:focus, :active)>.card.active-bg,
 .t-delay-200 {
   transition-delay: all 2s;
 }
+
 .rounded {
   border-radius: var(--border-radius);
 }
@@ -452,6 +472,7 @@ a:where(:focus, :active)>.card.active-bg,
 .outline-off2 {
   outline-offset: 2px !important;
 }
+
 .outline-off-2 {
   outline-offset: -5px !important;
 }

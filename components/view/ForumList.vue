@@ -9,8 +9,7 @@ onMounted(() => {
     if (getPersistData('forums-new')) {
         forums.value = getPersistData('forums-new')
     } else {
-        nativeFetch('/api/forums/')
-            .then((res) => res.json())
+        nativeFetch<{ forums: Forum[] }>('/forums/')
             .then((data) => {
                 if (data.forums) {
                     forums.value = data.forums

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import Toast from "@/models/Toast"
+import useToasts from "@/composables/Toasts"
+import Toast from "@/models/Toast";
 
-const toasts = useState<Toast[]>('mainToast', () => [])
+const toasts = useToasts()
 
 const doAction = (action: Function, toast: Toast) => {
     action(toast)

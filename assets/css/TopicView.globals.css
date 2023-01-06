@@ -68,6 +68,37 @@
     outline: 2px solid red !important;
 }
 
+.comment.answer:not(:hover) {
+    outline: 2px solid green !important;
+}
+
+.comment.answer {
+    margin-top: 2.5rem !important;
+}
+.comment.answer button.useful:before {
+    content: 'Not ';
+    margin-right: 1ch;
+    font-size: smaller;
+    color: red;
+}
+.comment.answer:before {
+    content: 'Answer';
+    position: absolute;
+    color: rgb(0, 255, 0);
+    letter-spacing: 1ch;
+    top: 0;
+    right: 2.5rem;
+    transform: translateY(-2.5rem);
+    text-shadow: 4px 2px 2px black;
+    transition: var(--transition);
+}
+.comment.answer:hover:before {
+    letter-spacing: .5ch;
+    color: currentColor;
+}
+/* right: 0;
+transform: translate(1.5rem, 4rem) rotate(90deg); */
+
 .topic-view .card-author,
 .comment .card-author {
     font-weight: bold;
@@ -87,12 +118,12 @@
     text-decoration: none;
 }
 
-.reply {
+.comment .reply {
     flex-direction: column;
     margin-left: 3rem !important;
 }
 
-.reply:nth-of-type(2) {
+.comment .reply:nth-of-type(2) {
     margin-top: 3rem;
 }
 
@@ -108,6 +139,8 @@
 
 .cont-menu>*::before {
     content: 'Menu:';
+    font-size: small;
+    opacity: .8;
     border-bottom: var(--border);
 }
 
@@ -120,8 +153,24 @@
     top: 2.5rem;
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
-    padding: 1rem 2rem 0 2rem;
+    padding: 0 1rem;
     z-index: 1;
+}
+
+.cont-menu>* button {
+    box-shadow: none;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    border-right: var(--border);
+}
+
+.cont-menu>* button:focus,
+.cont-menu>* button:hover {
+    box-shadow: none;
+    padding-right: 0;
+    padding-left: 2.4rem;
+    outline: var(--border) !important;
+    outline-offset: -2px !important;
 }
 
 .cont-menu:hover>* {
@@ -141,6 +190,7 @@ p {
 .empty-not-outline:not(:empty) {
     outline: var(--border);
 }
+
 [id^="editorPreview"] {
     max-height: 30vh;
     overflow-y: auto;

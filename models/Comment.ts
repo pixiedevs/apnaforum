@@ -6,7 +6,6 @@ interface Comment {
     authorUsername: string
     body: string
     likes: number
-    deleted: number
     replies: Reply[]
     time: string
 };

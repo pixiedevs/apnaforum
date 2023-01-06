@@ -3,6 +3,7 @@ import { nativeFetch, usePostFetch } from "@/helpers/api";
 import { markToHtmlPreview } from "@/helpers/input";
 import { showToast } from "@/helpers/appState";
 import { Topic } from "@/models/Topic";
+import Message from "@/models/Message";
 
 useHead({
     title: 'Update Topic'
@@ -18,8 +19,7 @@ const router = useRouter()
 onMounted(() => {
     let slug = useRoute().query.topic
     if (slug) {
-        nativeFetch(`/api/topics/${slug}/`)
-            .then((res) => res.json())
+        nativeFetch<{ topic: Topic }>(`/topics/${slug}/`)
             .then((data) => {
                 if (data.topic && data.topic.authorUsername == useAuthUser().value.username) {
                     topic.value = data.topic
@@ -36,15 +36,13 @@ onMounted(() => {
 
 const handleAddTopic = (e: FormDataEvent) => {
     let form = new FormData(e.target as HTMLFormElement)
-    usePostFetch('api/topics/update/', form)
-        .then((res) => { console.log(res.status); return res.json() }).then((data) => {
-            console.log(data);
-
+    usePostFetch<{ message: Message, slug: string }>('/topics/update/', form)
+        .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 0, data.slug ? [{ name: 'open', do: () => { navigateTo('/topics/' + data.slug) } }] : null)
             }
             else
-                throw new Error("")
+                throw new Error()
         })
         .catch((err) => {
             showToast("Unable to update topic!", "error", 5000)

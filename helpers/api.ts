@@ -1,4 +1,4 @@
-import { deleteCookie } from "@/helpers/cookie"
+import { deleteUserCookies } from "@/helpers/cookie"
 import { showToast } from "./appState"
 
 const CONTACT_TYPES = {
@@ -29,22 +29,22 @@ const _getFullPathAndHeader = (path = '/', auth = true) => {
         "Authorization": 'Bearer ' + token
     } : {}
 
-    return { path: runtimeConfig.public.apiBase + path, header: header }
+    return { path: runtimeConfig.public.apiBase + "/api" + path, header: header }
 }
 
 const usePostFetch = async (path = '/', formData: FormData, method: string = 'POST', auth = true) => {
-
     const options = _getFullPathAndHeader(path, auth)
 
-    return fetch(`${options.path}?res_type=api`, {
+    const r = await fetch(`${options.path}?res_type=api`, {
         method: method,
         body: formData,
         credentials: "same-origin",
         headers: options.header
-    });
+    })
+    return await r.json()
 }
 
-/* The path must not start with '/' and data string must be start with & */
+/* The data string must be start with & */
 const dataFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
 
@@ -55,11 +55,11 @@ const dataFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
     });
 }
 
-/* The path must not start with '/' and data string must be start with & */
-const nativeFetch = (path = '/', query = '', method = 'GET', auth = true) => {
+/* The data string must be start with & */
+const nativeFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
 
-    return fetch(`${options.path}?res_type=api${query}`, {
+    return $fetch<T>(`${options.path}?res_type=api${query}`, {
         method: method,
         credentials: 'same-origin',
         headers: options.header
@@ -67,41 +67,35 @@ const nativeFetch = (path = '/', query = '', method = 'GET', auth = true) => {
 }
 
 const handleLogout = (syncToBackend = false) => {
+    const authUser = useAuthUser()
+
     if (syncToBackend) {
-        dataFetch('api/logout/')
+        dataFetch('/logout/')
             .then((res) => { })
             .catch((err) => { });
     }
-    deleteCookie("sessiona")
-    deleteCookie("sessionr")
-    updateAuthUser()
+    deleteUserCookies()
+    authUser.value.username = ''
+    authUser.value.isa = ''
+    authUser.value.auth = false
 }
 
 const updateAuthUser = () => {
     const authUser = useAuthUser()
 
-    nativeFetch('/api/user-auth/')
-        .then((res) => res.json())
+    nativeFetch<{ user: typeof authUser.value, message?: any }>('/user-auth/')
         .then((data) => {
-            if (data.message) {
-                showToast(data.message.desc, data.message.tag)
-            }
-
-            authUser.value.auth = data.auth
-            authUser.value.username = data.username
-            authUser.value.isa = data.isa
-        })
-        .catch((err) => {
-            authUser.value.username = ''
-            authUser.value.isa = ''
-            authUser.value.auth = false
+            authUser.value.auth = data.user.auth
+            authUser.value.username = data.user.username
+            authUser.value.isa = data.user.isa
+        }).catch((err) => {
+            handleLogout()
         })
 }
 
 const doReport = (name: string, id: string, type: string) => {
 
-    nativeFetch('/api/report/')
-        .then((res) => res.json())
+    nativeFetch('/report/')
         .then((data) => {
         })
         .catch((err) => {

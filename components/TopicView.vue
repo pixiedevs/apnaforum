@@ -24,22 +24,25 @@ const vMdToHtml = {
 
 <template>
     <div class="topic-view">
-        <div class="cont-menu shadow">
-            <div>
-                <button class='button button-clear row'
-                    @click="copyTextWithMsg(getFullPath(), 'Link copied to clipboard')">Copy
-                    Link</button>
-                <button class='button button-clear row'>Report</button>
-                <button class='button button-clear row'
-                    v-if="authUser.username == topic.authorUsername || ['moderator', 'staff', 'admin'].includes(authUser.isa)"
-                    @click="deleteTopic(topic.slug)">Delete</button>
-                <NuxtLink class="route"
-                    :to="'/update-topic/?topic=' + topic.slug">
+        <ClientOnly>
+            <div class="cont-menu shadow">
+                <div>
                     <button class='button button-clear row'
-                        v-if="authUser.username == topic.authorUsername">Edit</button>
-                </NuxtLink>
+                        @click="copyTextWithMsg(getFullPath(), 'Link copied to clipboard')">Copy
+                        Link</button>
+                    <ButtonIfAuth class='button button-clear row'>Report
+                    </ButtonIfAuth>
+                    <button class='button button-clear row'
+                        v-if="authUser.username == topic.authorUsername || ['moderator', 'staff', 'admin'].includes(authUser.isa)"
+                        @click="deleteTopic(topic.slug)">Delete</button>
+                    <NuxtLink class="route"
+                        :to="'/update-topic/?topic=' + topic.slug">
+                        <button class='button button-clear row'
+                            v-if="authUser.username == topic.authorUsername">Edit</button>
+                    </NuxtLink>
+                </div>
             </div>
-        </div>
+        </ClientOnly>
         <div class="row">
             <img src="~/assets/icons/user.svg" alt="author" />
             <div class="card-body flex-fill">
@@ -50,14 +53,17 @@ const vMdToHtml = {
                 </div>
             </div>
         </div>
-        <div class="interaction mx-5">
-            <div>
-                <Like :isLiked="topic.isLiked" :toId="topic.slug"
-                    :count="topic.likes" />
+        <ClientOnly>
+            <div class="interaction mx-5">
+                <div>
+                    <Like :isLiked="topic.isLiked" :toId="topic.slug"
+                        :count="topic.likes" />
+                </div>
+                <div>
+                    <span>{{ commentsCount }}
+                        {{ 'Comment' + (commentsCount > 1 ? 's' : '') }} </span>
+                </div>
             </div>
-            <div>
-                <span>{{ commentsCount }} Comments</span>
-            </div>
-        </div>
+        </ClientOnly>
     </div>
 </template>

@@ -1,8 +1,8 @@
-import Toast from "@/models/Toast"
+import useToasts from "@/composables/Toasts"
 
 /* Set and Show Toast message */
 const showToast = (desc: string, tag = "info", milisec = 0, actions?: { name: string, do: Function }[]) => {
-    const toasts = useState<Toast[]>('mainToast')
+    const toasts = useToasts()
     let i = toasts.value.findIndex((t) => { if (t.desc === desc) return t })
     if (i >= 0) {
         toasts.value.splice(i)
@@ -27,7 +27,7 @@ const showToast = (desc: string, tag = "info", milisec = 0, actions?: { name: st
 
 /* Hide Toast message */
 const hideToast = (index = -1) => {
-    const toasts = useState<Toast[]>('mainToast')
+    const toasts = useToasts()
     if (index < 0) {
         index = toasts.value.length - 1
     }
@@ -36,7 +36,7 @@ const hideToast = (index = -1) => {
 
 /* Show all Toast messages */
 const showAllToasts = () => {
-    const toasts = useState<Toast[]>('mainToast')
+    const toasts = useToasts()
     toasts.value
     for (let i = 0; i < toasts.value.length; i++) {
         toasts.value[i].show = true

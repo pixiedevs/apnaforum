@@ -8,15 +8,16 @@ import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
 import { markToHtml } from "@/helpers/input";
 import { deleteReply } from "@/helpers/topicServices";
 
-const { reply, replyCallback, topicIsActive } = defineProps<{
+const { reply, replyCallback, topicIsActive, commentId } = defineProps<{
     reply: Reply,
+    commentId: number,
     replyCallback: Function,
     topicIsActive: boolean
 }>()
 
 
 const doCallback = () => {
-    replyCallback(reply.id.toString(), 'reply', reply.body.substring(0, 50))
+    replyCallback(reply.id.toString(), 'reply', reply.body.substring(0, 50), commentId)
 }
 
 </script>
@@ -31,10 +32,11 @@ const doCallback = () => {
                 <button class='button button-clear row'
                     @click="copyTextWithMsg(getFullPath() + '#reply-' + reply.id, 'Link copied to clipboard')">Copy
                     Link</button>
-                <button class='button button-clear row'>Report</button>
+                <ButtonIfAuth class='button button-clear row'>Report</ButtonIfAuth>
                 <ButtonIfAuthor class='button button-clear row'
                     :author="reply.authorUsername" :moderator="true"
                     @click="deleteReply(reply.id)">Delete</ButtonIfAuthor>
+                <!-- v-if="reply.body !== '[DELETED]'" -->
             </div>
         </div>
         <div class="row">

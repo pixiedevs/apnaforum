@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { usePostFetch } from "@/helpers/api";
-import { showToast } from "@/helpers/appState";
 import { markToHtmlPreview } from "@/helpers/input";
+import { addService } from "@/helpers/topicServices";
+
 const commentBody = ref('')
 const authUser = useAuthUser()
 
-const { slug, refreshComments } = defineProps<{ slug: string, refreshComments: Function }>()
-
-const scrollToComment = (id: string) => {
-    setTimeout(() => {
-        document.getElementById('comment-' + id).scrollIntoView(true)
-    }, 500);
-}
+const { slug, insertComment } = defineProps<{ slug: string, insertComment: Function }>()
 
 const handleSubmit = (event: any) => {
     event.preventDefault()
@@ -23,22 +17,18 @@ const handleSubmit = (event: any) => {
     const formData = new FormData(event.target)
     formData.set('topic-id', slug)
 
-    usePostFetch('api/comments/add/', formData)
-        .then((res) => res.json())
-        .then((data) => {
-
-            if (data.message) {
-                if (data.message.tag === "success") {
-                    commentBody.value = ''
-                    refreshComments()
-                }
-                showToast(data.message.desc, data.message.tag, 5000, data["comment-id"] ? [{ name: 'View', do: () => { scrollToComment(data["comment-id"]) } }] : null)
-            }
-            else throw new Error("")
-        }).catch((err) => {
-            console.log(err);
-            showToast("Unable to add comment!", "error", 5000)
+    addService("comment", formData, (id) => {
+        insertComment({
+            id: id,
+            authorName: '',
+            authorUsername: authUser.value.username,
+            body: commentBody.value,
+            likes: 0,
+            replies: [],
+            time: new Date().toString(),
         })
+        commentBody.value = '';
+    })
 }
 
 </script>
@@ -50,7 +40,7 @@ const handleSubmit = (event: any) => {
             <div class="editor-menu"></div>
 
             <textarea name="comment-body" id="editor-add-comment"
-                v-model="commentBody" required></textarea>
+                v-model="commentBody" minlength="10" required></textarea>
 
             <button type='submit' class="button">submit</button>
 

@@ -7,7 +7,7 @@ useHead({
 	title: 'Home'
 })
 
-const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>('/api/topics/')
+const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>('/topics/')
 
 </script>
 
@@ -20,7 +20,7 @@ const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>(
 	</div>
 	<div class='page' v-else>
 		<div class="heading text-center">
-			<h1>Hot and trending Topics</h1>
+			<h1>Hot - trending Topics</h1>
 		</div>
 		<section class="container mt-5">
 			<TopicCardList v-if="!pending && !error"

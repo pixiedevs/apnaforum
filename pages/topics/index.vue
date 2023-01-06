@@ -17,33 +17,31 @@ let page = route.query.page ? Number(route.query.page) : 1
 const fetchData = () => {
 	try {
 		if (process.client && getPersistData('topics__page_' + page)) {
-			nativeFetch('/api/topics/', '&res=time&page=' + page)
-				.then((res) => res.json())
+			nativeFetch<{ time: string }>('/topics/', '&res=time&page=' + page)
 				.then((res) => {
 					if (res.time !== topicsData.value.topics[0].time)
 						throw new Error()
-				}).catch((err) => { console.info("Cached version.") });
+				}).catch((err) => { /* console.info("Cached version.") */ });
 			const data = getPersistData('topics__page_' + page)
 			if (data.topics[0].time !== topicsData.value.topics[0].time)
 				topicsData.value = data
 		} else throw new Error()
 	}
 	catch (er) {
-		dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/api/topics/', '&page=' + page)
+		dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', '&page=' + page)
 			.then((res) => {
 				topicsData.value = res.data.value
 				page = res.data.value.page.curr
 				if (route.query.page !== page.toString())
 					router.push({ query: page == 1 ? {} : { page: page } })
 				setPersistData('topics__page_' + page, res.data.value)
-				console.log("data fetch");
 
 			}).catch((err) => { });
 	}
 }
 
 fetchData(/* page */)
-onUpdated(() => console.log("updated"))
+// onUpdated(() => console.log("updated"))
 
 function prevPage() {
 	page--

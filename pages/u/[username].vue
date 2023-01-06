@@ -2,13 +2,10 @@
 import { dataFetch } from '@/helpers/api';
 import User from '@/models/User';
 
-// definePageMeta({
-//     middleware: ['auth']
-// })
-
 const route = useRoute()
 
-const { data, pending, error } = dataFetch<{ user: User }>(`/api/user/${route.params.username}/`)
+const { data, pending, error } = dataFetch<{ user: User }>(`/user/${route.params.username}/`)
+
 </script>
 
 <template>
@@ -48,7 +45,7 @@ const { data, pending, error } = dataFetch<{ user: User }>(`/api/user/${route.pa
                     <div class="col-sm-2">
 
                         <span class="row border-b my-2 p-1 ps-2">
-                            Profile</span>
+                            Avatar</span>
                         <span class="row border-b my-2 p-1 ps-2">
                             Email</span>
                         <span class="row border-b my-2 p-1 ps-2">
@@ -63,7 +60,7 @@ const { data, pending, error } = dataFetch<{ user: User }>(`/api/user/${route.pa
 
                     <div class="col-sm-4">
                         <span class="row border-b my-2 p-1 ps-2">
-                            : {{ data.user.profile.public.profile }}
+                            : {{ data.user.profile.public.avatar }}
                         </span>
                         <span class="row border-b my-2 p-1 ps-2">
                             : {{ data.user.profile.public.email }}

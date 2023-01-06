@@ -9,14 +9,13 @@ onMounted(() => {
     if (getPersistData('users-top')) {
         users.value = getPersistData('users-top')
     } else {
-            nativeFetch('/api/users-top/')
-        .then((res) => res.json())
-        .then((data) => {
-            users.value = data.users
-            setPersistData('users-top', data.users)
+        nativeFetch<{ users: UserShort[] }>('/users-top/')
+            .then((data) => {
+                users.value = data.users
+                setPersistData('users-top', data.users)
 
-        })
-        .catch((err) => { })
+            })
+            .catch((err) => { })
     }
 })
 

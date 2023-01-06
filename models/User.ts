@@ -1,5 +1,5 @@
 interface UserProfile {
-    profile: string,
+    avatar: string,
     private: boolean,
     email: string,
     company: string,

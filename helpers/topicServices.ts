@@ -1,18 +1,18 @@
-import { nativeFetch } from "@/helpers/api";
+import { nativeFetch, usePostFetch } from "@/helpers/api";
 import { showToast } from "@/helpers/appState";
+import Message from "@/models/Message";
 
 
 const voteService = (action: string, to: string, toId: string, liked: boolean, onSuccess: Function, onError: Function) => {
 
-    nativeFetch(`api/vote/`, `&action=${action}&to=${to}&id=${toId}`, liked ? 'DELETE' : 'GET')
-        .then((r) => r.json())
+    nativeFetch<{ message: Message, count: number }>(`/vote/`, `&action=${action}&to=${to}&id=${toId}`, liked ? 'DELETE' : 'GET')
         .then((d) => {
             if (d.message.tag === 'success') {
                 onSuccess(d.count)
             } else {
                 if (d.message)
                     showToast(d.message.desc, d.message.tag)
-                throw new Error("")
+                throw new Error()
             }
         })
         .catch((e) => {
@@ -23,14 +23,16 @@ const voteService = (action: string, to: string, toId: string, liked: boolean, o
         })
 }
 
-const deleteService = (to: string, query: string, onSuccess?: Function) => {
-    nativeFetch(`/api/${to}s/delete`, query, 'DELETE')
-        .then((res) => res.json())
+const deleteService = (to: string, query: string, id: number, onSuccess?: Function) => {
+    nativeFetch<{ message: Message }>(`/${(to === 'reply' ? 'reply' : `${to}s`)}/delete`, query, 'DELETE')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 5000)
                 if (onSuccess && data.message.tag === "success") {
                     onSuccess()
+                    if (id && (to === 'reply' || to === 'comment')) {
+                        document.querySelector(`#${to}-${id} .card-text`).innerHTML = '[DELETED]'
+                    }
                 }
             }
         }).catch((err) => {
@@ -41,7 +43,7 @@ const deleteService = (to: string, query: string, onSuccess?: Function) => {
 const deleteComment = (id: number) => {
     showToast('Are you sure to delete this comment?', 'warning', 10000, [{
         name: 'DELETE', do: () => {
-            deleteService("comment", `&comment-id=${id}`)
+            deleteService("comment", `&comment-id=${id}`, id)
         }
     }])
 }
@@ -49,7 +51,7 @@ const deleteComment = (id: number) => {
 const deleteReply = (id: number) => {
     showToast('Are you sure to delete this reply?', 'warning', 10000, [{
         name: 'DELETE', do: () => {
-            deleteService("reply", `&reply-id=${id}`)
+            deleteService("reply", `&reply-id=${id}`, id)
         }
     }])
 }
@@ -57,9 +59,32 @@ const deleteReply = (id: number) => {
 const deleteTopic = (id: string) => {
     showToast('Are you sure to delete this topic?', 'warning', 10000, [{
         name: 'DELETE', do: () => {
-            deleteService("topic", `&topic-slug=${id}`, () => { useRouter().back() })
+            deleteService("topic", `&topic-slug=${id}`, 0, () => { useRouter().back() })
         }
     }])
 }
 
-export { voteService, deleteComment, deleteReply, deleteTopic }
+
+const addService = (to: string, form: FormData, onSuccess: Function) => {
+    usePostFetch(`/${(to === 'reply' ? 'reply' : `${to}s`)}/add/`, form)
+        .then((data: { message: Message, id?: number, slug?: string }) => {
+            if (data.message.tag === "success") {
+                onSuccess(data.id ?? data.slug)
+                setTimeout(() => {
+                    showToast(data.message.desc, data.message.tag, 10000,
+                        [{
+                            name: 'View', do: () => {
+                                to === 'topic'
+                                    ? navigateTo('/topics/' + data.slug)
+                                    : document.getElementById(`${to}-${data.id}`).scrollIntoView(true)
+                            }
+                        }])
+                }, 500);
+            }
+            else throw new Error()
+        }).catch((err) => {
+            showToast(`Unable to add ${to}!`, "error", 5000)
+        })
+}
+
+export { voteService, deleteComment, deleteReply, deleteTopic, addService }

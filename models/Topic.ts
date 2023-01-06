@@ -11,6 +11,6 @@ export interface Topic extends TopicBase {
     authorUsername: string
     body: string
     forumData: {name: string, moderator: string}
-    answer: number
+    answer?: number
     isLiked: boolean
 };
