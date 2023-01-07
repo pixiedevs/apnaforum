@@ -31,11 +31,12 @@ const doCallback = () => {
                     @click="doCallback()" v-if="topicIsActive">Reply
                 </ButtonIfAuth>
                 <button class='button button-clear row' @click="copyTextWithMsg(getFullPath() + '#comment-' + comment.id,
-    'Link copied to clipboard')">Copy Link</button>
+                'Link copied to clipboard')">Copy Link</button>
                 <ButtonIfAuth class='button button-clear row'>Report
                 </ButtonIfAuth>
-                <ButtonIfAuthor class='button button-clear row useful' :author="author"
-                    @click="markUserful(comment.id)">Useful</ButtonIfAuthor>
+                <ButtonIfAuthor class='button button-clear row useful'
+                    :author="author" @click="markUserful(comment.id)">Useful
+                </ButtonIfAuthor>
                 <ButtonIfAuthor class='button button-clear row'
                     v-if="comment.body !== '[DELETED]'"
                     :author="comment.authorUsername" :moderator="true"
@@ -43,7 +44,8 @@ const doCallback = () => {
             </div>
         </div>
         <div class="row">
-            <img src="~/assets/icons/user.svg" alt="author" loading="lazy" />
+            <AvatarImg :name="comment.authorUsername"
+                :alt="comment.authorUsername + '\' avatar'" v-once />
             <div class="card-body flex-fill mb-5">
                 <div class="card-text md-html mt-2"
                     v-html="markToHtml(comment.body)"></div>

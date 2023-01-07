@@ -80,9 +80,6 @@ const addReplyCB = (id: string, type: string, body: string, commentId: number) =
 
 onMounted(() => {
 	fetchCommentDataIfNeed()
-	// setTimeout(() => {
-	// 	console.log(comments.value[0]);
-	// }, 1000);
 })
 
 const markUserful = (commentId: number) => {
@@ -156,11 +153,6 @@ const insertReply = (newReply) => {
 			<TopicViewComponent :topic="topicData.topic" callback=""
 				:commentsCount="pendingComments ? 0 : comments.length" />
 
-			<!-- <ClientOnly> -->
-			<AddCommentComponent v-if="topicData.topic.isactive"
-				:slug="topicData.topic.slug" :insertComment="insertComment" />
-			<!-- </ClientOnly> -->
-
 			<div v-if="pendingComments" id="comments">
 				<h2 class="loading text-center">Loading...</h2>
 			</div>
@@ -183,6 +175,12 @@ const insertReply = (newReply) => {
 		</section>
 
 		<section v-if="topicData.topic.isactive">
+
+			<!-- <ClientOnly> -->
+			<AddCommentComponent v-if="topicData.topic.isactive"
+				:slug="topicData.topic.slug" :insertComment="insertComment" />
+			<!-- </ClientOnly> -->
+
 			<div class='container modal'
 				:class="{ 'show': floatReply, 'hidden': !floatReply }">
 				<!-- <ClientOnly> -->

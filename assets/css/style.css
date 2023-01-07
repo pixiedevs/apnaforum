@@ -88,7 +88,8 @@ body {
 }
 
 #view {
-  /* margin-top: 5rem; */
+  scroll-padding-top: 5rem;
+  margin-top: 5rem;
   display: flex;
   width: 100;
 }
@@ -96,12 +97,12 @@ body {
 main {
   padding: .2rem;
   margin: 0;
+  margin-left: 250px;
   flex: 1 1 auto !important;
 }
 
 #view>.aside-right,
 #view>.aside-left {
-  /* width: clamp(200px, 30rem, 250px); */
   max-width: 250px;
   transition: all .5s;
   left: 2rem;
@@ -109,8 +110,10 @@ main {
 }
 
 #view>.aside-left {
-  /* max-width: 250px; */
-  height: calc(100vh - calc(var(--navbar-height) * 4));
+  position: fixed;
+  left: 0;
+  /* height: calc(100vh - calc(var(--navbar-height) * 4)); */
+  height: 100%;
   overflow-y: auto;
   margin-right: 1rem;
 }
@@ -120,13 +123,17 @@ main {
 }
 
 .navbar {
-  width: 98%;
-  background-color: var(--blur-bg);
-  margin: 0 auto;
-  margin-top: 1rem;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 1rem);
+  background-color: var(--body-bg);
+  /* margin: 0 auto; */
+  margin-top: .5rem;
   /* box-shadow: 0 -30px 100px -1px var(--primary-bg); */
   /* border-bottom: 4px solid var(--primary-bg); */
-  border-radius: var(--border-radius);
+  z-index: 99;
 }
 
 .navbar .navbar-brand img {
@@ -156,7 +163,9 @@ main {
   justify-content: space-between;
   align-items: center;
   transition: all .5s;
-  /* flex-wrap: wrap; */
+  border-radius: var(--border-radius);
+    background-color: var(--blur-bg);
+    /* flex-wrap: wrap; */
 }
 
 .navbar-body .middle {
@@ -366,22 +375,9 @@ hr:nth-of-type(even) {
 }
 
 .page {
-  min-height: 98vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
-}
-
-.topic-view,
-.card {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  word-wrap: break-word;
-  /* -webkit-background-clip: border-box;
-    background-clip: border-box; */
-  padding: calc(1.5 * var(--padding));
-  color: var(--card-color);
-  border-radius: var(--border-radius);
 }
 
 .card-bg {
@@ -807,7 +803,9 @@ form.strict:invalid button[type=submit] {
     top: 0;
     transform: translateX(-100vw);
     width: clamp(200px, 30rem, 25vw);
-    height: calc(100vh - .5rem);
+  }
+  main {
+    margin-left: 0;
   }
 
   #view>.aside-left-toggler::before {

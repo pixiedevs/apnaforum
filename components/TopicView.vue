@@ -44,7 +44,8 @@ const vMdToHtml = {
             </div>
         </ClientOnly>
         <div class="row">
-            <img src="~/assets/icons/user.svg" alt="author" />
+            <AvatarImg :name="topic.authorUsername"
+                :alt="topic.authorUsername + '\' avatar'" v-once />
             <div class="card-body flex-fill">
                 <NuxtLink class="route" :to="`/u/${topic.authorUsername}/`">
                     <span class="card-author">{{ topic.authorUsername }}</span>

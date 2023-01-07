@@ -40,7 +40,8 @@ const doCallback = () => {
             </div>
         </div>
         <div class="row">
-            <img src="~/assets/icons/user.svg" alt="author" loading="lazy" />
+            <AvatarImg :name="reply.authorUsername"
+                :alt="reply.authorUsername + '\' avatar'" v-once />
             <div class="card-body flex-fill mb-5">
                 <NuxtLink :to="'#' + reply.reply_of.id">
                     <small class="card-reply_of">Reply to

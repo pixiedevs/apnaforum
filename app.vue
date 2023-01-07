@@ -78,7 +78,6 @@ onMounted(() => {
 }
 
 #main-loading {
-  top: 2px;
   position: fixed;
   margin-left: 1%;
   margin-right: 1%;
@@ -86,11 +85,12 @@ onMounted(() => {
   background: transparent;
   width: 98%;
   height: 0.4rem;
-  z-index: 98
+  z-index: 4;
 }
 
 #main-loading.show {
   animation: shimmer 1s linear infinite forwards;
-  background: linear-gradient(90deg, var(--primary-bg2), var(--primary-bg), var(--secondary-bg2))
+  background: linear-gradient(90deg, var(--primary-bg2), var(--primary-bg), var(--secondary-bg2));
+  margin-top: .5rem;
 }
 </style>

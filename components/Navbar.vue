@@ -1,6 +1,6 @@
 <template>
-    <nav class="navbar shadow">
-        <div class="navbar-body">
+    <nav class="navbar">
+        <div class="navbar-body shadow">
             <div class="navbar-brand">
                 <NuxtLink class="navbar-brand" :to="'/'">
                     <strong class="navbar-title">Apna Forum</strong>

@@ -22,14 +22,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container" v-if="users.length > 0">
+    <div class="d-flex flex-column" v-if="users.length > 0">
         <strong>Top Users: -</strong>
-        <NuxtLink class="route outline-off2" :to="'/u/' + user.username"
-            v-for="user of users" :key="user.username" v-once>
-            <strong class="row shadow border-x pointer my-2 p-1 ps-2"
-                :key="user.username">
-                {{ user.username }}
-            </strong>
+        <NuxtLink class="outline-off2 route button button-outline"
+            :to="'/u/' + user.username" v-for="user of users"
+            :key="user.username" v-once>
+            {{ user.username }}
         </NuxtLink>
     </div>
 </template>

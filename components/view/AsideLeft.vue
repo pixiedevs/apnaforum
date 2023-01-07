@@ -7,9 +7,9 @@ import ForumListComponent from "@/components/view/ForumList.vue";
 </script>
 
 <template>
-    <aside class="aside-left card-bg">
+    <aside class="aside-left card-bg pt-5">
         <ClientOnly>
-            <AuthUserProfile class='mt-5 mx-auto text-center' />
+            <AuthUserProfile class='mx-auto text-center' />
         </ClientOnly>
 
         <div class="text-center">
@@ -24,17 +24,5 @@ import ForumListComponent from "@/components/view/ForumList.vue";
 
         <ForumListComponent />
 
-        <div class="card-group">
-            <div class="card p-1" v-for="n in 10" :key="n">
-                <div class="card-body bg-primary2n text-grn rounded p-3 m-0">
-                    <div class="card-text">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Amet consequuntur sint magnam libero
-                        qui,
-                        id ipsum voluptates quisquam tempore suscipit est a
-                    </div>
-                </div>
-            </div>
-        </div>
     </aside>
 </template>
