@@ -40,6 +40,9 @@ dump/
 # vercel
 .vercel
 
+# project
+server/
+
 # typescript
 *.tsbuildinfo
 nuxt-env.d.ts
@@ -48,3 +51,6 @@ nuxt-env.d.ts
 package-lock.json
 bun.lockb
 yarn.lock
+
+# debug only changes
+components/AvatarImg.vue

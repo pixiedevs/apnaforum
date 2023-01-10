@@ -3,11 +3,27 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            "@/components/*": ["components/*"],
-            "@/composables/*": ["composables/*"],
-            "@/models/*": ["models/*"],
-            "@/helpers/*": ["helpers/*"],
-            "@/assets/*": ["assets/*"],
+            "@/components/*": [
+                "components/*"
+            ],
+            "@/composables/*": [
+                "composables/*"
+            ],
+            "@/models/*": [
+                "models/*"
+            ],
+            "@/helpers/*": [
+                "helpers/*"
+            ],
+            "@/assets/*": [
+                "assets/*"
+            ],
+            "@/server/*": [
+                "server/*"
+            ],
+            "@/server/utils/*": [
+                "server/utils/*"
+            ],
         },
         "allowJs": true
     },

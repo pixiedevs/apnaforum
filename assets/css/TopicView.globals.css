@@ -77,19 +77,16 @@
     border-radius: 50%;
 }
 
-.topic-view img:active+*,
-.reply img:active+*,
-.comment img:active+* {
+.topic-view img:hover+*,
+.reply img:hover+*,
+.comment img:hover+* {
     margin-left: 2.5rem;
     opacity: .2;
 }
 
-.topic-view img:active,
-.reply img:active,
-.comment img:active,
-.topic-view img:focus-within,
-.reply img:focus-within,
-.comment img:focus-within {
+.topic-view img:hover,
+.reply img:hover,
+.comment img:hover {
     position: absolute;
     transform: translate(0%, -40%);
     width: min(30rem, 70vw);

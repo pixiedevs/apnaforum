@@ -1,6 +1,7 @@
 <script setup>
 import { usePostFetch } from '@/helpers/api';
 import { showToast, startLoading, stopLoading } from '@/helpers/appState';
+import { formDataToObj } from '@/helpers/input';
 
 useHead({
     title: 'SignUp'
@@ -13,8 +14,8 @@ const otpSent = ref(false)
 const handleSignUp = (e) => {
     const form = new FormData(e.target)
 
-    if (form.get('username').length < 7) {
-        showToast("Username must be more or equal to 7 letters.", "warning", 5000)
+    if (form.get('username').length < 5) {
+        showToast("Username must be more or equal to 5 letters.", "warning", 5000)
         return
     }
 
@@ -36,8 +37,6 @@ const handleSignUp = (e) => {
                 showToast(data.message.desc, data.message.tag, 5000)
                 if (data.message.tag === 'success') {
                     emailVerify.value = true
-                    form.set('req', 'send')
-                    handleVerification(form)
                 }
                 stopLoading()
             } else {
@@ -45,7 +44,7 @@ const handleSignUp = (e) => {
             }
         })
         .catch((err) => {
-            showToast("Unable to SignUp! try changing email, username or password.", "error", 5000)
+            showToast("Unable to SignUp! try changing email, username or password.", "error", 10000)
         })
 }
 const handleVerification = (form) => {
@@ -53,7 +52,7 @@ const handleVerification = (form) => {
         form.set('req', 'verify')
     }
     startLoading(2000)
-    usePostFetch(`/email-verify/`, form, 'POST')
+    usePostFetch(`/api/email-verify/`, JSON.stringify(formDataToObj(form)), 'POST')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 5000)
@@ -68,7 +67,7 @@ const handleVerification = (form) => {
             }
         })
         .catch((err) => {
-            showToast("Unable to SignUp! try changing email, username or password.", "error", 5000)
+            showToast("Unable to verify! try checking email, username or otp.", "error", 10000)
         })
 }
 
@@ -85,9 +84,10 @@ const handleVerification = (form) => {
             <form @submit.prevent="handleSignUp">
                 <div class="container">
                     <label>Email: <input type="email" name='email' required
+                            value="pyadav7787@gmail.com"
                             placeholder="This email will be used at verification." /></label>
                     <label>Username: <input type="text" name='username'
-                            required /></label>
+                            value="deepak" required /></label>
                     <div v-if="!emailVerify">
                         <label>Password: <input type="password" name='password'
                                 required /></label>
@@ -115,7 +115,7 @@ const handleVerification = (form) => {
                     <details>
                         <summary class="editor-help pointer">Info</summary>
                         <p>
-                            Without email verification your account will be not
+                            Without email verification your account will not
                             activated.
                         </p>
                     </details>
@@ -128,6 +128,9 @@ const handleVerification = (form) => {
                 <button type="button" class="ms-2"
                     @click="emailVerify = !emailVerify"
                     v-text="emailVerify ? 'SignUp' : 'Email Verification'"></button>
+                <button v-if="emailVerify" type="button" class="ms-2"
+                    @click="otpSent = !otpSent"
+                    v-text="otpSent ? 'get otp' : 'verify otp'"></button>
             </div>
 
         </div>

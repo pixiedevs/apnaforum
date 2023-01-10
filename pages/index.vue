@@ -7,7 +7,7 @@ useHead({
 	title: 'Home'
 })
 
-const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>('/topics/')
+const { data: topicsData, error, pending } = dataFetch<{ topics: TopicBase[] }>('/topics/', '','GET', false)
 
 </script>
 

@@ -10,11 +10,13 @@ import { copyTextWithMsg, getFullPath } from "@/helpers/dom";
 import { deleteComment } from "@/helpers/topicServices";
 
 const { comment, replyCallback, topicIsActive } = defineProps<{
+    index: number,
     comment: Comment,
     replyCallback: Function,
     author: string,
     topicIsActive: boolean,
-    markUserful: Function
+    markUserful: Function,
+    moreReplies: Function
 }>()
 
 const doCallback = () => {
@@ -52,8 +54,10 @@ const doCallback = () => {
                 <hr class="small" />
 
                 <small class="card-details pe-4">
-                    <NuxtLink class="route"
-                        :to="`/u/${comment.authorUsername}/`">
+
+                    <span class="card-author px-3">{{ comment.repliesCount }}
+                        replies</span>
+                    <NuxtLink :to="`/u/${comment.authorUsername}/`">
                         <span
                             class="card-author px-3">{{ comment.authorUsername }}</span>
                     </NuxtLink>
@@ -65,5 +69,12 @@ const doCallback = () => {
         <ReplyComponent v-for="reply in comment.replies" :key="reply.id"
             :reply="reply" :replyCallback="replyCallback"
             :topicIsActive="topicIsActive" :commentId="comment.id" />
+
+        <button v-if="comment.repliesCount != comment.replies?.length"
+            class="button-clear small ms-auto mb-2"
+            title="Currently this option isn't available."
+            @click="moreReplies(null, true, comment.id, index)">Load
+            more</button>
+
     </div>
 </template>

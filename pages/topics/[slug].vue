@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import TopicViewComponent from "@/components/TopicView.vue"
-import CommentComponent from "@/components/Comment.vue"
 import AddCommentComponent from "@/components/AddComment.vue"
 import AddReplyComponent from "@/components/AddReply.vue"
+import CommentComponent from "@/components/Comment.vue"
 
 import { dataFetch, nativeFetch } from "@/helpers/api";
 import { Topic } from "@/models/Topic";
 import Comment from "@/models/Comment";
+import Reply from "@/models/Reply";
 import { getPersistData, setPersistData } from "@/helpers/cookie";
 import { showToast } from "@/helpers/appState";
 import Message from "@/models/Message";
@@ -23,22 +24,25 @@ let page = 1
 
 const floatReply = useState('floatReply', () => false)
 /* replyTo will save [reply of comment-id, reply of type, trimmed body, and base comment-id] */
-const replyTo = useState('replyTo', () => ['', '', '', -1])
+const replyTo = useState<[string, string, string, number]>('replyTo', () => ['', '', '', -1])
 
 const { data: topicData, pending, error: error } = dataFetch<{ topic: Topic }>(`/topics/${route.params.slug}/`)
 
-const fetchCommentData = (time: string) => {
-	nativeFetch<{ comments: Comment[] }>(`/topics/${route.params.slug}/`, '&res=comments&page=' + page, 'GET')
+const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?: number) => {
+	nativeFetch<{ comments: Comment[], replies: Reply[] }>(`/topics/${route.params.slug}/`, `&res=${onlyReplies ? 'replies&comment-id=' + id : 'comments'}&page=` + page, 'GET')
 		.then((data) => {
-			comments.value = data.comments
-
-			setPersistData(`${route.params.slug}=${page}`, { comments: data.comments, time: time }, 0, false)
-			pendingComments.value = false
-			if (isInit && route.hash) {
-				setTimeout(() => {
-					document.querySelector(route.hash)?.scrollIntoView(true)
-				}, 500);
-				isInit = false
+			if (onlyReplies) {
+				comments.value[index].replies = data.replies
+			} else {
+				comments.value = data.comments
+				pendingComments.value = false
+				if (isInit && route.hash) {
+					setTimeout(() => {
+						document.querySelector(route.hash)?.scrollIntoView(true)
+					}, 500);
+					isInit = false
+				}
+				setPersistData(`${route.params.slug}=${page}`, { comments: data.comments, time: time }, 0, false)
 			}
 		})
 		.catch((err) => { pendingComments.value = false, errorComments.value = true })
@@ -107,10 +111,11 @@ const insertReply = (newReply) => {
 	comments.value.forEach(comment => {
 		if (comment.id === replyTo.value[3]) {
 			newReply.reply_of.username = comment.authorUsername
-			comment.replies.push(newReply)
+			comment.replies.unshift(newReply)
 		}
 	})
 }
+
 
 </script>
 
@@ -163,8 +168,9 @@ const insertReply = (newReply) => {
 			<div class="card-group hover-light" id="comments"
 				v-else-if="topicData.topic.isactive">
 				<!-- <ClientOnly> -->
-				<CommentComponent v-for="comment of comments" :key="comment.id"
-					:replyCallback="addReplyCB"
+				<CommentComponent v-for="(comment, index) of comments"
+					:key="comment.id" :index="index" :replyCallback="addReplyCB"
+					:moreReplies="fetchCommentData"
 					:class="{ 'answer': comment.id == topicData.topic.answer }"
 					:topicIsActive="topicData.topic.isactive"
 					:author="topicData.topic.authorUsername" :comment="comment"

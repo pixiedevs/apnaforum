@@ -10,15 +10,11 @@ import { deleteTopic } from "@/helpers/topicServices";
 const { topic } = defineProps<{ topic: Topic, commentsCount: number }>()
 
 const authUser = useAuthUser()
+let convert = false
 
-const vMdToHtml = {
-    created(el, binding) {
-        el.innerHTML = binding.value;
-    },
-    mounted(el, binding) {
-        el.innerHTML = markToHtml(binding.value);
-    }
-}
+onMounted(() => {
+    convert = true
+})
 
 </script>
 
@@ -50,7 +46,8 @@ const vMdToHtml = {
                 <NuxtLink class="route" :to="`/u/${topic.authorUsername}/`">
                     <span class="card-author">{{ topic.authorUsername }}</span>
                 </NuxtLink>
-                <div class="card-text md-html" v-md-to-html="topic.body" v-once>
+                <div class="card-text md-html"
+                    v-html="convert ? markToHtml(topic.body) : topic.body">
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ interface Comment {
     body: string
     likes: number
     replies: Reply[]
+    repliesCount: number
     time: string
 };
 

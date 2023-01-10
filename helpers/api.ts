@@ -26,13 +26,14 @@ const _getFullPathAndHeader = (path = '/', auth = true) => {
 
     const header = auth ? {
         "Accept": "*/*",
+        "Content-Type": "multipart/form-data",
         "Authorization": 'Bearer ' + token
     } : {}
 
-    return { path: runtimeConfig.public.apiBase + "/api" + path, header: header }
+    return { path: (path.startsWith('/api') ? path : runtimeConfig.public.apiBase + "/api" + path), header: header }
 }
 
-const usePostFetch = async (path = '/', formData: FormData, method: string = 'POST', auth = true) => {
+const usePostFetch = async (path = '/', formData: FormData | string, method: string = 'POST', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
 
     const r = await fetch(`${options.path}?res_type=api`, {

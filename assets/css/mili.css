@@ -383,11 +383,14 @@ template {
  * Prevent user selection
  */
 .user-select-none {
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
     -o-user-select: none;
-    user-select: none;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    touch-action: none !important;
+    user-select: none !important;
 }
 
 *,
@@ -773,6 +776,7 @@ input[type='radio'] {
     flex: 1 0 0%;
     flex-direction: column;
 }
+
 /* .row .col {
     display: block;
     flex: 1 1 auto;
@@ -1234,6 +1238,7 @@ a {
     color: var(--link-color);
     text-decoration: none;
 }
+
 a:visited {
     color: var(--visited-color);
 }
@@ -1520,6 +1525,7 @@ kbd {
 .w-100 {
     width: 100%
 }
+
 .hm-100v {
     min-height: 100vh
 }
@@ -1527,6 +1533,7 @@ kbd {
 .wm-100v {
     min-width: 100vw
 }
+
 .h-80 {
     height: 80%
 }
@@ -1542,6 +1549,7 @@ kbd {
 .wm-80v {
     min-width: 80vw
 }
+
 .h-50 {
     height: 50%
 }
@@ -1549,6 +1557,7 @@ kbd {
 .w-50 {
     width: 50%
 }
+
 .hm-50v {
     min-height: 50vh
 }

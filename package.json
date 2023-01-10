@@ -15,6 +15,7 @@
     "nuxt-vite": "^0.3.5"
   },
   "dependencies": {
+    "nodemailer": "^6.8.0",
     "pagedown": "^1.1.0"
   }
 }

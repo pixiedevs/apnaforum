@@ -23,14 +23,10 @@ const objToFormData = (obj: object): FormData => {
     return form
 }
 const formDataToObj = (formData: FormData): object => {
-    const form = new FormData()
     let obj = {}
     formData.forEach((v, k)=> {
         obj[k] = v
     })
-    // Object.entries(obj).forEach((o) => {
-    //     form.set(o[0], o[1]);
-    // })
     return obj
 }
 

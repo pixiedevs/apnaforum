@@ -7,18 +7,23 @@ const authUser = useAuthUser()
 const likeModel = ref<boolean>(isLiked)
 const likeCount = ref<number>(count)
 
-const doLike = () => {
+const doLike = (e) => {
+    e.target.disabled = true
     voteService("like", "topic", toId, likeModel.value, (c: number) => {
         likeCount.value = c
     }, () => { likeModel.value = !likeModel.value })
+    setTimeout(() => {
+        e.target.disabled = false
+    }, 5000);
 }
 </script>
 
 <template>
-    <input type="checkbox" v-model="likeModel" @click="doLike()" id="topic-like"
+    <input type="checkbox" v-model="likeModel" @click="doLike" id="topic-like"
         class='hidden' v-if="authUser.auth" />
     <label class='heart me-3' for="topic-like"></label>
-    <span v-if="count"> {{ likeCount }} likes </span>
+    <span
+        v-if="count">{{ likeCount + ' Like' + (likeCount > 1 ? 's' : '') }}</span>
 </template>
 
 <style scoped>
