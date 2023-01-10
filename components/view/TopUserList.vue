@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
     <div class="d-flex flex-column" v-if="users.length > 0">
         <strong>Top Users: -</strong>
-        <NuxtLink class="outline-off2 route button button-outline"
+        <NuxtLink class="outline-off2 route button button-outline small"
             :to="'/u/' + user.username" v-for="user of users"
             :key="user.username" v-once>
             {{ user.username }}
