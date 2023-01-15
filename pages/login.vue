@@ -13,14 +13,14 @@ const router = useRouter()
 const handleLogin = (e) => {
     const formData = new FormData(e.target)
 
-    startLoading(2000)
+    startLoading(2)
     usePostFetch(`/token/`, formData, 'POST')
         .then((data) => {
             if (data.access) {
                 setCookieValue("sessiona", data.access, 5)
                 setCookieValue("sessionr", data.refresh, 6)
                 updateAuthUser()
-                showToast("You successfully logged in.", "success", 5000)
+                showToast("You successfully logged in.", "success", 5)
                 stopLoading()
                 router.back()
             } else {
@@ -28,7 +28,7 @@ const handleLogin = (e) => {
             }
         })
         .catch((err) => {
-            showToast("Wrong username or password!", "error", 5000)
+            showToast("Wrong username or password!", "error", 5)
         })
 }
 

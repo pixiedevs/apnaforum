@@ -3,7 +3,6 @@ import { nativeFetch, usePostFetch } from "@/helpers/api";
 import { markToHtmlPreview } from "@/helpers/input";
 import { showToast } from "@/helpers/appState";
 import { Topic } from "@/models/Topic";
-import Message from "@/models/Message";
 
 useHead({
     title: 'Update Topic'
@@ -24,7 +23,7 @@ onMounted(() => {
                 if (data.topic && data.topic.authorUsername == useAuthUser().value.username) {
                     topic.value = data.topic
                 } else {
-                    showToast("Unable to find topic or it's not created by you!", "error", 5000)
+                    showToast("Unable to find topic or it's not created by you!", "error", 5)
                     setTimeout(() => {
                         router.back()
                     }, 1000);
@@ -36,7 +35,7 @@ onMounted(() => {
 
 const handleAddTopic = (e: FormDataEvent) => {
     let form = new FormData(e.target as HTMLFormElement)
-    usePostFetch<{ message: Message, slug: string }>('/topics/update/', form)
+    usePostFetch('/topics/update/', form)
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 0, data.slug ? [{ name: 'open', do: () => { navigateTo('/topics/' + data.slug) } }] : null)
@@ -45,7 +44,7 @@ const handleAddTopic = (e: FormDataEvent) => {
                 throw new Error()
         })
         .catch((err) => {
-            showToast("Unable to update topic!", "error", 5000)
+            showToast("Unable to update topic!", "error", 5)
         })
 }
 

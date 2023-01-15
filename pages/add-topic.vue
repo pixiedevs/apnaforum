@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { usePostFetch } from "@/helpers/api";
 import { markToHtmlPreview } from "@/helpers/input";
-import { showToast } from "@/helpers/appState";
 import { addService } from "@/helpers/topicServices";
 
 const topicBody = ref('')
@@ -64,9 +62,7 @@ const handleAddTopic = (e) => {
                         </ul>
                         </p>
                     </details>
-                    <div class="card col">
-                        <button type='submit' class="button">submit</button>
-                    </div>
+                    <button type='submit'>submit</button>
 
                     <div class="empty-not-outline" id="editorPreview-add-topic"
                         v-html="markToHtmlPreview(topicBody ?? '')"></div>

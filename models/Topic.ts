@@ -1,5 +1,5 @@
 export interface TopicBase {
-    authorName: string
+    authorUsername: string
     name: string
     slug: string
     time: string
@@ -8,9 +8,9 @@ export interface TopicBase {
 
 export interface Topic extends TopicBase {
     isactive: boolean
-    authorUsername: string
+    authorName: string
     body: string
-    forumData: {name: string, moderator: string}
+    forumData: { name: string, moderator: string }
     answer?: number
     isLiked: boolean
 };

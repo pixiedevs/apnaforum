@@ -11,7 +11,7 @@ const router = useRouter()
 
 
 onMounted(() => {
-    startLoading(2000)
+    startLoading(2)
     handleLogout()
     showToast("You successfully logged out.", "success")
     stopLoading()

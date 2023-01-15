@@ -16,7 +16,7 @@ import ForumListComponent from "@/components/view/ForumList.vue";
             <button class="small mx-5" @click="showAllToasts()">Show
                 toasts</button>
             <button class="small mx-5"
-                @click="showToast('Do Nothing button!', 'debug', 5000)">Do
+                @click="showToast('Do Nothing button!', 'debug', 5)">Do
                 Nothing</button>
         </div>
 

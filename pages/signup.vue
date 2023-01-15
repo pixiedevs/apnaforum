@@ -15,26 +15,26 @@ const handleSignUp = (e) => {
     const form = new FormData(e.target)
 
     if (form.get('username').length < 5) {
-        showToast("Username must be more or equal to 5 letters.", "warning", 5000)
+        showToast("Username must be more or equal to 5 letters.", "warning", 5)
         return
     }
 
     if (emailVerify.value) return handleVerification(form)
 
     if (form.get('password').length < 8) {
-        showToast("Password must be more or equal to 8 letters.", "warning", 5000)
+        showToast("Password must be more or equal to 8 letters.", "warning", 5)
         return
     }
     if (form.get('password') !== form.get('password__confirm')) {
-        showToast("Password and confirm password are not same!", "warning", 5000)
+        showToast("Password and confirm password are not same!", "warning", 5)
         return
     }
 
-    startLoading(2000)
+    startLoading(2)
     usePostFetch(`/signup/`, form, 'POST')
         .then((data) => {
             if (data.message) {
-                showToast(data.message.desc, data.message.tag, 5000)
+                showToast(data.message.desc, data.message.tag, 5)
                 if (data.message.tag === 'success') {
                     emailVerify.value = true
                 }
@@ -44,18 +44,18 @@ const handleSignUp = (e) => {
             }
         })
         .catch((err) => {
-            showToast("Unable to SignUp! try changing email, username or password.", "error", 10000)
+            showToast("Unable to SignUp! try changing email, username or password.", "error", 10)
         })
 }
 const handleVerification = (form) => {
     if (form.get('otp')) {
         form.set('req', 'verify')
     }
-    startLoading(2000)
+    startLoading(2)
     usePostFetch(`/api/email-verify/`, JSON.stringify(formDataToObj(form)), 'POST')
         .then((data) => {
             if (data.message) {
-                showToast(data.message.desc, data.message.tag, 5000)
+                showToast(data.message.desc, data.message.tag, 5)
                 if (data.message.tag === 'success') {
                     if (otpSent.value) navigateTo('/login/')
                     else
@@ -67,7 +67,7 @@ const handleVerification = (form) => {
             }
         })
         .catch((err) => {
-            showToast("Unable to verify! try checking email, username or otp.", "error", 10000)
+            showToast("Unable to verify! try checking email, username or otp.", "error", 10)
         })
 }
 

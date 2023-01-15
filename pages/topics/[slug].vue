@@ -8,9 +8,9 @@ import { dataFetch, nativeFetch } from "@/helpers/api";
 import { Topic } from "@/models/Topic";
 import Comment from "@/models/Comment";
 import Reply from "@/models/Reply";
-import { getPersistData, setPersistData } from "@/helpers/cookie";
-import { showToast } from "@/helpers/appState";
-import Message from "@/models/Message";
+import LoadingPage from "@/components/view/LoadingPage.vue";
+import TopicErrorPage from "@/components/view/TopicErrorPage.vue";
+import { persistComments, ifPersistComments, markCommentUserful } from "@/helpers/topicServices";
 
 const route = useRoute()
 
@@ -18,15 +18,15 @@ const comments = useState<Comment[]>('commentsData', () => [])
 const pendingComments = useState('pendingComments', () => true)
 const errorComments = useState('errorComments', () => false)
 let isInit = true
-// let page = route.query.page ? Number(route.query.page) : 1
-let page = 1
+let persist = true
+let page = /* route.query.page ? Number(route.query.page) : */ 1
 
 
 const floatReply = useState('floatReply', () => false)
 /* replyTo will save [reply of comment-id, reply of type, trimmed body, and base comment-id] */
 const replyTo = useState<[string, string, string, number]>('replyTo', () => ['', '', '', -1])
 
-const { data: topicData, pending, error: error } = dataFetch<{ topic: Topic }>(`/topics/${route.params.slug}/`)
+const { data: topicData, pending, error } = dataFetch<{ topic: Topic }>(`/topics/${route.params.slug}/`)
 
 const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?: number) => {
 	nativeFetch<{ comments: Comment[], replies: Reply[] }>(`/topics/${route.params.slug}/`, `&res=${onlyReplies ? 'replies&comment-id=' + id : 'comments'}&page=` + page, 'GET')
@@ -42,38 +42,23 @@ const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?
 					}, 500);
 					isInit = false
 				}
-				setPersistData(`${route.params.slug}=${page}`, { comments: data.comments, time: time }, 0, false)
+				if (persist) {
+					persistComments(`${route.params.slug}=${page}`, data.comments, time)
+				}
 			}
 		})
 		.catch((err) => { pendingComments.value = false, errorComments.value = true })
 }
 const fetchCommentDataIfNeed = () => {
 	pendingComments.value = true
-	let time = new Date().toString();
 
-	try {
-		if (getPersistData(`${route.params.slug}=${page}`, false)) {
-			nativeFetch<{ time: string }>(`/topics/${route.params.slug}/`, '&res=time&page=' + page, 'GET')
-				.then((res) => {
-					const data = getPersistData(`${route.params.slug}=${page}`, false)
-
-					time = res.time
-
-					if (res.time === data.time) {
-						comments.value = data.comments
-						pendingComments.value = false
-						return;
-					}
-					fetchCommentData(time)
-				})
-				.catch((err) => {
-					fetchCommentData(time)
-				});
-		} else {
-			fetchCommentData(time)
-		}
-	} catch (er) {
-		fetchCommentData(time)
+	if (persist) {
+		ifPersistComments(route.params.slug as string, page,
+			(data) => {
+				comments.value = data.comments
+				pendingComments.value = false
+				return;
+			}, fetchCommentData)
 	}
 }
 
@@ -83,24 +68,17 @@ const addReplyCB = (id: string, type: string, body: string, commentId: number) =
 }
 
 onMounted(() => {
-	fetchCommentDataIfNeed()
+	if (!error.value)
+		fetchCommentDataIfNeed()
 })
 
 const markUserful = (commentId: number) => {
 	let remove = topicData.value.topic.answer == commentId
-
-	nativeFetch<{ message: Message, id: number }>(`/comments/markuseful/`, `&comment-id=${commentId}&topic-id=${route.params.slug}`, remove ? 'DELETE' : 'GET')
-		.then((data) => {
-			if (data.message) {
-				showToast(data.message.desc, data.message.tag, 5000)
-				if (data.message.tag === "success") {
-					topicData.value.topic.answer = remove ? null : data.id
-				}
-			}
+	markCommentUserful(route.params.slug as string, commentId, remove,
+		(id: number | null) => {
+			topicData.value.topic.answer = remove ? null : id
 		})
-		.catch((err) => {
-			console.log(err);
-		});
+
 }
 
 const insertComment = (newComment: Comment) => {
@@ -112,6 +90,7 @@ const insertReply = (newReply) => {
 		if (comment.id === replyTo.value[3]) {
 			newReply.reply_of.username = comment.authorUsername
 			comment.replies.unshift(newReply)
+			comment.repliesCount++
 		}
 	})
 }
@@ -120,17 +99,18 @@ const insertReply = (newReply) => {
 </script>
 
 <template>
-	<div class='page' v-if="pending">
-		<h2 class="loading text-center">Loading...</h2>
-	</div>
-	<div class='page' v-else-if="error">
-		<h2>Unable to get data!</h2>
-	</div>
+	<LoadingPage v-if="pending">
+	</LoadingPage>
+	<TopicErrorPage v-else-if="error">
+	</TopicErrorPage>
 
 	<div class='page' v-else>
 
 		<Head>
 			<Title>{{ topicData.topic.name }}</Title>
+			<Meta name="description"
+				:content="topicData.topic.body.substring(0, 150)" />
+			<Meta name="keywords" :content="topicData.topic.name" />
 		</Head>
 
 		<section class='flex-fill' :class="{ 'opacity-low': floatReply }">

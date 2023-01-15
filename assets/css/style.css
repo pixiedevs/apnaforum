@@ -164,8 +164,8 @@ main {
   align-items: center;
   transition: all .5s;
   border-radius: var(--border-radius);
-    background-color: var(--blur-bg);
-    /* flex-wrap: wrap; */
+  background-color: var(--blur-bg);
+  /* flex-wrap: wrap; */
 }
 
 .navbar-body .middle {
@@ -506,7 +506,6 @@ a:where(:focus, :active)>.card.active-bg,
 }
 
 .card-group .card:hover,
-.topic-view:hover,
 .card:hover {
   box-shadow: inset -5px -5px 5px #00011122,
     inset 5px 5px 5px #00011122;
@@ -621,6 +620,19 @@ input:disabled+label:hover {
 
 a.route {
   color: inherit !important;
+}
+
+.topic-view,
+.card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  word-wrap: break-word;
+  /* -webkit-background-clip: border-box;
+    background-clip: border-box; */
+  padding: calc(1.5 * var(--padding));
+  color: var(--card-color);
+  border-radius: var(--border-radius);
 }
 
 .card-text a {
@@ -794,6 +806,7 @@ form.strict:invalid button[type=submit] {
   transform: scale(1);
 }
 
+
 @media screen and (max-width: 1200px) {
   #view>.aside-left {
     position: fixed;
@@ -804,6 +817,7 @@ form.strict:invalid button[type=submit] {
     transform: translateX(-100vw);
     width: clamp(200px, 30rem, 25vw);
   }
+
   main {
     margin-left: 0;
   }
@@ -843,6 +857,29 @@ form.strict:invalid button[type=submit] {
   }
 }
 
+label[for=rightAside-toggler] {
+  display: none;
+}
+
+@media screen and (max-width: 1200px) and (min-width: 950px) {
+  label[for=rightAside-toggler] span {
+    position: fixed;
+    top: 50%;
+  }
+
+  label[for=rightAside-toggler] {
+    display: inline;
+    min-height: 100%;
+  }
+
+  #rightAside-toggler:not(:checked)~.aside-right {
+    width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
 @media screen and (max-width: 950px) {
   #view {
     flex-wrap: wrap;
@@ -863,6 +900,6 @@ form.strict:invalid button[type=submit] {
 
   .page {
     min-height: 50vh;
-  }
 
+  }
 }

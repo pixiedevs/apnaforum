@@ -46,12 +46,13 @@ const setPersistData = (key: string, value: any, minutes = 60, inCookie = true) 
     try {
         if (inCookie)
             document.cookie = `ps:${key}=${JSON.stringify(value)}; domain=${document.location.hostname}; max-age=${minutes * 60}; path=/;`
-        else
+        else {
             sessionStorage.setItem("ps:".concat(key), JSON.stringify({ value, time: new Date().toString() }))
+        }
     } catch (er) {
         return false
     }
-    return true
+    return "ps:".concat(key)
 }
 
 export {

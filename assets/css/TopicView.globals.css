@@ -1,15 +1,3 @@
-.topic-view,
-.card {
-    position: relative;
-    display: flex;
-    min-width: 0;
-    word-wrap: break-word;
-    /* -webkit-background-clip: border-box;
-    background-clip: border-box; */
-    padding: calc(1.5 * var(--padding));
-    color: var(--card-color);
-    border-radius: var(--border-radius);
-}
 .comment,
 .topic-view:hover,
 .topic-view {
@@ -94,7 +82,7 @@
     transition: all var(--transition);
 }
 
-.topic-view .card-text,
+/* .topic-view .card-text, */
 .reply .card-text,
 .comment .card-text {
     max-height: 70vh;
@@ -102,6 +90,14 @@
     overflow-x: hidden;
     overflow-y: visible;
     padding: 1rem;
+}
+
+.card-text a {
+    display: inline;
+    max-width: 20rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .reply:active,
@@ -179,9 +175,19 @@
     position: absolute;
     right: 1rem;
     top: 0;
+    text-align: center;
     font-size: 2rem;
+    width: 3ch;
+    height: 3ch;
     font-weight: bolder;
+    line-height: 2ch;
     transform: rotate(90deg);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.cont-menu:active::before {
+    background-color: var(--blur-bg);
 }
 
 .cont-menu>*::before {
@@ -202,6 +208,7 @@
     border-radius: var(--border-radius);
     padding: 0 1rem;
     z-index: 1;
+    transition: var(--transition);
 }
 
 .cont-menu>* button {

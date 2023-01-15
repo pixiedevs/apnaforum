@@ -3,6 +3,7 @@ import AsideLeft from "@/components/view/AsideLeft.vue";
 import AsideRight from "@/components/view/AsideRight.vue";
 
 const leftSidebar = useState('leftSidebar', () => false)
+const rightSidebar = useState('rightSidebar', () => false)
 
 const toggleAsideLeft = (e: MouseEvent) => {
     let t = e.target as HTMLElement
@@ -11,17 +12,23 @@ const toggleAsideLeft = (e: MouseEvent) => {
         leftSidebar.value = false
     }
 }
+watch(rightSidebar, (value) => {
+    localStorage.setItem('rightSidebar', value.toString())
+})
+
+onMounted(() => {
+    rightSidebar.value = localStorage.getItem('rightSidebar') === 'true'
+})
 
 </script>
 
 <template>
     <div id="view">
         <!-- <ClientOnly> -->
-            <div class="aside-left-toggler toggler"
-                @click="leftSidebar = !leftSidebar" title="Show drawer">
-            </div>
-            <AsideLeft :class="{ 'show': leftSidebar }"
-                @click="toggleAsideLeft" />
+        <div class="aside-left-toggler toggler"
+            @click="leftSidebar = !leftSidebar" title="Show drawer">
+        </div>
+        <AsideLeft :class="{ 'show': leftSidebar }" @click="toggleAsideLeft" />
         <!-- </ClientOnly> -->
 
         <main id="main">
@@ -29,7 +36,14 @@ const toggleAsideLeft = (e: MouseEvent) => {
         </main>
 
         <!-- <ClientOnly> -->
-            <AsideRight />
+        <label for="rightAside-toggler"><span class="shadow py-5"
+                title="Toggle sidebar">&gt;</span>
+        </label>
+        <input id="rightAside-toggler" type="checkbox" class="hidden"
+            name="rightAside" v-model="rightSidebar">
+
+
+        <AsideRight />
         <!-- </ClientOnly> -->
 
     </div>

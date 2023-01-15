@@ -24,6 +24,7 @@ const handleSubmit = (event: any) => {
             authorUsername: authUser.value.username,
             body: commentBody.value,
             likes: 0,
+            repliesCount: 0,
             replies: [],
             time: new Date().toString(),
         })

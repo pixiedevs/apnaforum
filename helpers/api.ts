@@ -1,5 +1,5 @@
 import { deleteUserCookies } from "@/helpers/cookie"
-import { showToast } from "./appState"
+import { formDataToObj } from "./input"
 
 const CONTACT_TYPES = {
     "contact": "Contact",
@@ -26,19 +26,21 @@ const _getFullPathAndHeader = (path = '/', auth = true) => {
 
     const header = auth ? {
         "Accept": "*/*",
-        "Content-Type": "multipart/form-data",
         "Authorization": 'Bearer ' + token
     } : {}
 
     return { path: (path.startsWith('/api') ? path : runtimeConfig.public.apiBase + "/api" + path), header: header }
 }
 
-const usePostFetch = async (path = '/', formData: FormData | string, method: string = 'POST', auth = true) => {
+const usePostFetch = async (path = '/', form: FormData, method: string = 'POST', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
+
+    options.header["Content-Type"] = "application/json"
+    // options.header["Content-Type"] = (typeof form === 'string') ? "application/json" : "multipart/form-data"
 
     const r = await fetch(`${options.path}?res_type=api`, {
         method: method,
-        body: formData,
+        body: JSON.stringify(formDataToObj(form)),
         credentials: "same-origin",
         headers: options.header
     })

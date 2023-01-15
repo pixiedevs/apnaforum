@@ -8,6 +8,24 @@
                     "value": "s-maxage=120, stale-while-revalidate=600"
                 }
             ]
+        },
+        {
+            "source": "/add-topic",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "s-maxage=600, stale-while-revalidate=6000"
+                }
+            ]
+        },
+        {
+            "source": "/signup",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "s-maxage=600, stale-while-revalidate=6000"
+                }
+            ]
         }
     ]
 }

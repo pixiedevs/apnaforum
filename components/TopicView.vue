@@ -10,10 +10,10 @@ import { deleteTopic } from "@/helpers/topicServices";
 const { topic } = defineProps<{ topic: Topic, commentsCount: number }>()
 
 const authUser = useAuthUser()
-let convert = false
+let convert = ref(false)
 
 onMounted(() => {
-    convert = true
+    convert.value = true
 })
 
 </script>
@@ -47,12 +47,12 @@ onMounted(() => {
                     <span class="card-author">{{ topic.authorUsername }}</span>
                 </NuxtLink>
                 <div class="card-text md-html"
-                    v-html="convert ? markToHtml(topic.body) : topic.body">
+                    v-html="convert ? markToHtml(topic.body) : '\'' + topic.body + '\''">
                 </div>
             </div>
         </div>
         <ClientOnly>
-            <div class="interaction mx-5">
+            <div class="interaction m-5">
                 <div>
                     <Like :isLiked="topic.isLiked" :toId="topic.slug"
                         :count="topic.likes" />

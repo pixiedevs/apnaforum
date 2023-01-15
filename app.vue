@@ -51,17 +51,8 @@ useHead({
     name: 'keywords',
     content: runtimeConfig.public.keywords ?? ''
   },
-  ]
-})
-
-onMounted(() => {
-  if (!runtimeConfig.public.debug) {
-    var gtmScript = document.createElement("script")
-    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=' + runtimeConfig.public.gtagid
-    gtmScript.setAttribute("defer", true)
-
-    document.head.appendChild(gtmScript)
-  }
+  ],
+  script: [runtimeConfig.public.debug ? { src: 'https://www.googletagmanager.com/gtm.js?id=' + runtimeConfig.public.gtagid, async: true } : {}]
 })
 
 </script>

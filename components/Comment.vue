@@ -56,7 +56,7 @@ const doCallback = () => {
                 <small class="card-details pe-4">
 
                     <span class="card-author px-3">{{ comment.repliesCount }}
-                        replies</span>
+                        {{ 'Repl' + (comment.repliesCount > 1 ? 'ies' : 'y') }}</span>
                     <NuxtLink :to="`/u/${comment.authorUsername}/`">
                         <span
                             class="card-author px-3">{{ comment.authorUsername }}</span>
