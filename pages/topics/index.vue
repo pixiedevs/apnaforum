@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TopicCardList from "@/components/TopicCardList.vue"
-import { nativeFetch } from "@/helpers/api";
+import { dataFetch, nativeFetch } from "@/helpers/api";
 import { TopicBase } from "@/models/Topic";
 import PaginationPage, { defaultPaginationPage } from "@/models/PaginationPage";
 
@@ -12,31 +12,40 @@ const route = useRoute()
 const router = useRouter()
 const topicsData = ref({ topics: [], page: defaultPaginationPage() })
 const pending = ref(true)
-let page = route.query.page ? Number(route.query.page) : 1
+const page = ref(route.query.page ? Number(route.query.page) : 1)
 
 const fetchData = () => {
+	let query = ""
 	pending.value = true
-		nativeFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', '&page=' + page)
-			.then((res) => {
-				pending.value = false
-				topicsData.value = res
-				page = res.page.curr
-				if (route.query.page !== page.toString())
-					router.push({ query: page == 1 ? {} : { page: page } })
+	Object.entries(route.query).forEach(q => {
+		query = query.concat(`&${q[0]}=${q[1]}`)
+	})
 
-			}).catch((err) => { pending.value = false });
+	dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', query)
+		.then((res) => {
+			topicsData.value = res.data.value
+			page.value = res.data.value.page.curr
+			if (route.query.page !== page.toString()) {
+				route.query.page = page.value.toString()
+				router.push({ query: route.query })
+			}
+			pending.value = false
+
+		}).catch(() => { pending.value = false });
 }
 
 fetchData()
 
 function prevPage() {
-	page--
-	fetchData()
+	page.value--
 }
 function nextPage() {
-	page++
-	fetchData()
+	page.value++
 }
+
+watch([route, page], () => {
+	fetchData()
+})
 
 </script>
 
