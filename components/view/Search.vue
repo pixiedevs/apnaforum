@@ -13,7 +13,7 @@ function searchHandler(e) {
             results.value = []
             return;
         }
-        nativeFetch('/search/', '&q=' + e.target.value)
+        nativeFetch('/search/', {'q': e.target.value})
             .then((data) => {
                 results.value = data.results
                 if (data.message) {

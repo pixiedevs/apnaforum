@@ -6,7 +6,7 @@ import { getPersistData, setPersistData } from "./cookie";
 
 export function voteService(action: string, to: string, toId: string, liked: boolean, onSuccess: Function, onError: Function) {
 
-    nativeFetch<{ message: Message, count: number }>(`/vote/`, `&action=${action}&to=${to}&id=${toId}`, liked ? 'DELETE' : 'GET')
+    nativeFetch<{ message: Message, count: number }>(`/vote/`, { action: action, to: to, id: toId }, liked ? 'DELETE' : 'GET')
         .then((d) => {
             if (d.message.tag === 'success') {
                 onSuccess(d.count)
@@ -24,7 +24,7 @@ export function voteService(action: string, to: string, toId: string, liked: boo
         })
 }
 
-function deleteService(to: string, query: string, id: number, onSuccess?: Function) {
+function deleteService(to: string, query: object, id: number, onSuccess?: Function) {
     nativeFetch<{ message: Message }>(`/${(to === 'reply' ? 'reply' : `${to}s`)}/delete`, query, 'DELETE')
         .then((data) => {
             if (data.message) {
@@ -44,7 +44,7 @@ function deleteService(to: string, query: string, id: number, onSuccess?: Functi
 export function deleteComment(id: number) {
     showToast('Are you sure to delete this comment?', 'warning', 10, [{
         name: 'DELETE', do: () => {
-            deleteService("comment", `&comment-id=${id}`, id)
+            deleteService("comment", { "comment-id": id }, id)
         }
     }])
 }
@@ -52,7 +52,7 @@ export function deleteComment(id: number) {
 export function deleteReply(id: number) {
     showToast('Are you sure to delete this reply?', 'warning', 10, [{
         name: 'DELETE', do: () => {
-            deleteService("reply", `&reply-id=${id}`, id)
+            deleteService("reply", { "reply-id": id }, id)
         }
     }])
 }
@@ -60,7 +60,7 @@ export function deleteReply(id: number) {
 export function deleteTopic(id: string) {
     showToast('Are you sure to delete this topic?', 'warning', 10, [{
         name: 'DELETE', do: () => {
-            deleteService("topic", `&topic-slug=${id}`, 0, () => { useRouter().back() })
+            deleteService("topic", { "topic-slug": id }, 0, () => { useRouter().back() })
         }
     }])
 }
@@ -107,7 +107,7 @@ export function ifPersistComments(slug: string, page: number, onSuccss: Function
     let time = new Date().toString();
     try {
         if (getPersistData(`${slug}=${page}`, false)) {
-            nativeFetch<{ time: string }>(`/topics/${slug}/`, '&res=time&page=' + page, 'GET')
+            nativeFetch<{ time: string }>(`/topics/${slug}/`, { res: time, page: page }, 'GET')
                 .then((res) => {
                     const data = getPersistData(`${slug}=${page}`, false)
 
@@ -132,7 +132,7 @@ export function ifPersistComments(slug: string, page: number, onSuccss: Function
 
 export function markCommentUserful(slug: string, commentId: number, remove: boolean, onSuccess: Function) {
 
-    nativeFetch<{ message: Message, id: number }>(`/comments/markuseful/`, `&comment-id=${commentId}&topic-id=${slug}`, remove ? 'DELETE' : 'GET')
+    nativeFetch<{ message: Message, id: number }>(`/comments/markuseful/`, { "comment-id": commentId, "topic-id": slug }, remove ? 'DELETE' : 'GET')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 5)

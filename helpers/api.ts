@@ -48,8 +48,12 @@ const usePostFetch = async (path = '/', form: FormData, method: string = 'POST',
 }
 
 /* The data string must be start with & */
-const dataFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
+const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
+    let query = ""
+    Object.entries(queryObj).forEach(q => {
+        query = query.concat(`&${q[0]}=${q[1]}`)
+    })
 
     return useFetch<T>(`${options.path}?res_type=api${query}`, {
         method: method,
@@ -59,8 +63,12 @@ const dataFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
 }
 
 /* The data string must be start with & */
-const nativeFetch = <T>(path = '/', query = '', method = 'GET', auth = true) => {
+const nativeFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
+    let query = ""
+    Object.entries(queryObj).forEach(q => {
+        query = query.concat(`&${q[0]}=${q[1]}`)
+    })
 
     return $fetch<T>(`${options.path}?res_type=api${query}`, {
         method: method,

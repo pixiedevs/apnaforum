@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TopicCardList from "@/components/TopicCardList.vue"
-import { dataFetch, nativeFetch } from "@/helpers/api";
+import { dataFetch } from "@/helpers/api";
 import { TopicBase } from "@/models/Topic";
 import PaginationPage, { defaultPaginationPage } from "@/models/PaginationPage";
 
@@ -15,13 +15,9 @@ const pending = ref(true)
 const page = ref(route.query.page ? Number(route.query.page) : 1)
 
 const fetchData = () => {
-	let query = ""
 	pending.value = true
-	Object.entries(route.query).forEach(q => {
-		query = query.concat(`&${q[0]}=${q[1]}`)
-	})
 
-	dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', query)
+	dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', route.query)
 		.then((res) => {
 			topicsData.value = res.data.value
 			page.value = res.data.value.page.curr
