@@ -69,17 +69,17 @@ export function deleteTopic(id: string) {
 export function addService(to: string, form: FormData, onSuccess: Function) {
     usePostFetch(`/${(to === 'reply' ? 'reply' : `${to}s`)}/add/`, form)
         .then((data: { message: Message, id?: number, slug?: string }) => {
-            if (data.message.tag === "success") {
+            if (data.message) {
                 onSuccess(data.id ?? data.slug)
                 setTimeout(() => {
                     showToast(data.message.desc, data.message.tag, 10,
-                        [{
+                        data.id || data.slug ? [{
                             name: 'View', do: () => {
                                 to === 'topic'
                                     ? navigateTo('/topics/' + data.slug)
                                     : document.getElementById(`${to}-${data.id}`).scrollIntoView(true)
                             }
-                        }])
+                        }] : null)
                 }, 500);
             }
             else throw new Error()

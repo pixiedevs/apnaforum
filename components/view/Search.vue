@@ -1,64 +1,57 @@
 <script setup>
 import { nativeFetch } from '@/helpers/api';
-import { showToast } from '@/helpers/appState';
 
 const results = ref([])
+const field = ref('name')
 var delayTimer;
+const mainLoading = useState('mainLoading')
 
 function searchHandler(e) {
     clearTimeout(delayTimer)
     delayTimer = setTimeout(() => {
-        if (e.target.value.length < 4) {
-            showToast("Search query must be minimum 4 letters long.", "warning", 5)
+        if (e.target.value.length < 2) {
             results.value = []
             return;
         }
-        nativeFetch('/search/', {'q': e.target.value})
+
+        mainLoading.value = true
+        nativeFetch('/search/', { 'q': e.target.value, 'f': field.value })
             .then((data) => {
-                results.value = data.results
-                if (data.message) {
-                    showToast(data.message.desc, data.message.tag, 10)
-                } else if (!data.results.length)
-                    showToast("No results found with this query!", "info", 5)
+                if (data.results && data.results.length) {
+                    results.value = data.results
+                    mainLoading.value = false
+                } else throw new Error()
             })
-            .catch((err) => { results.value = [] })
+            .catch(() => { results.value = [{ name: 'No results found!', slug: '' }]; mainLoading.value = false })
     }, 1000);
 }
 </script>
 
 <template>
     <div class="d-flex flex-column">
-        <strong>Search:</strong>
+        <div class="d-flex justify-content-between flex-wrap-reverse">
+            <div><strong>Search:</strong></div>
+            <div class="d-flex justify-content-end flex-wrap col-gap-1">
+                <small>With:</small>
+                <input type="radio" name="f" class="fancy" id="f-name"
+                    value="name" v-model="field">
+                <label for="f-name"> Name</label>
+                <input type="radio" name="f" class="fancy" id="f-forum"
+                    value="forum" v-model="field">
+                <label for="f-forum"> Forum</label>
+                <input type="radio" name="f" class="fancy" id="f-tag"
+                    value="tag" v-model="field">
+                <label for="f-tag"> Tag</label>
+            </div>
+        </div>
         <input type="search" name="search" id="search" @keypress="searchHandler"
             placeholder="search topics">
-        <ol class="search-results rounded">
+        <ul class="search-results rounded">
             <li v-for="result in results" :key="result.slug">
                 <NuxtLink :to="'/topics/' + result.slug"
                     class="route shadow py-2 m-0 underline">{{ result.name }}
                 </NuxtLink>
             </li>
-        </ol>
+        </ul>
     </div>
 </template>
-
-<style scoped>
-/* .search-results::before {
-    content: 'Results:';
-} */
-
-.search-results {
-    /* position: absolute; */
-    /* height: 0;
-    overflow: hidden; */
-    transition: all var(--transition);
-    /* transform: translateY(6rem); */
-    /* background-color: var(--card-bg); */
-    z-index: 9;
-}
-
-/* #search:focus + .search-results,
-#search:hover + .search-results,
-.search-results:hover {
-    height: auto;
-} */
-</style>

@@ -10,7 +10,9 @@ const CONTACT_TYPES = {
     "report_error": "Report Error",
 }
 
-const getContactTypes = () => (CONTACT_TYPES)
+export const getContactTypes = () => (CONTACT_TYPES)
+
+export const is_bot = () => /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)
 
 const _getFullPathAndHeader = (path = '/', auth = true) => {
     const runtimeConfig = useRuntimeConfig()
@@ -32,7 +34,7 @@ const _getFullPathAndHeader = (path = '/', auth = true) => {
     return { path: (path.startsWith('/api') ? path : runtimeConfig.public.apiBase + "/api" + path), header: header }
 }
 
-const usePostFetch = async (path = '/', form: FormData, method: string = 'POST', auth = true) => {
+export const usePostFetch = async (path = '/', form: FormData, method: string = 'POST', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
 
     options.header["Content-Type"] = "application/json"
@@ -48,7 +50,7 @@ const usePostFetch = async (path = '/', form: FormData, method: string = 'POST',
 }
 
 /* The data string must be start with & */
-const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
+export const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
     let query = ""
     Object.entries(queryObj).forEach(q => {
@@ -63,7 +65,7 @@ const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) =>
 }
 
 /* The data string must be start with & */
-const nativeFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
+export const nativeFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
     const options = _getFullPathAndHeader(path, auth)
     let query = ""
     Object.entries(queryObj).forEach(q => {
@@ -77,7 +79,7 @@ const nativeFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) 
     });
 }
 
-const handleLogout = (syncToBackend = false) => {
+export const handleLogout = (syncToBackend = false) => {
     const authUser = useAuthUser()
 
     if (syncToBackend) {
@@ -91,7 +93,7 @@ const handleLogout = (syncToBackend = false) => {
     authUser.value.auth = false
 }
 
-const updateAuthUser = () => {
+export const updateAuthUser = () => {
     const authUser = useAuthUser()
 
     nativeFetch<{ user: typeof authUser.value, message?: any }>('/user-auth/')
@@ -104,7 +106,7 @@ const updateAuthUser = () => {
         })
 }
 
-const doReport = (name: string, id: string, type: string) => {
+export const doReport = (name: string, id: string, type: string) => {
 
     nativeFetch('/report/')
         .then((data) => {
@@ -112,5 +114,3 @@ const doReport = (name: string, id: string, type: string) => {
         .catch((err) => {
         })
 }
-
-export { usePostFetch, dataFetch, nativeFetch, updateAuthUser, handleLogout, doReport, getContactTypes }

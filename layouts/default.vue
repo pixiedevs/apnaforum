@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AsideLeft from "@/components/view/AsideLeft.vue";
 import AsideRight from "@/components/view/AsideRight.vue";
+// import { is_bot } from "@/helpers/api";
 
 const leftSidebar = useState('leftSidebar', () => false)
 const rightSidebar = useState('rightSidebar', () => false)
@@ -17,6 +18,8 @@ watch(rightSidebar, (value) => {
 })
 
 onMounted(() => {
+    // console.log(is_bot())
+    
     rightSidebar.value = localStorage.getItem('rightSidebar') === 'true'
 })
 

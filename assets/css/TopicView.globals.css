@@ -231,9 +231,13 @@
     display: block;
 }
 
+textarea {
+    max-width: 90vw;
+}
+
 #add-reply,
 #add-comment {
-    max-width: 1000px;
+    max-width: min(1000px, 98vw);
     margin: auto;
 }
 

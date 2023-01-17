@@ -52,7 +52,7 @@ useHead({
     content: runtimeConfig.public.keywords ?? ''
   },
   ],
-  script: [runtimeConfig.public.debug ? { src: 'https://www.googletagmanager.com/gtm.js?id=' + runtimeConfig.public.gtagid, async: true } : {}]
+  script: [runtimeConfig.public.debug ? {} : { src: 'https://www.googletagmanager.com/gtm.js?id=' + runtimeConfig.public.gtagid, async: true }]
 })
 
 </script>

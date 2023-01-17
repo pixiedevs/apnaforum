@@ -1,33 +1,15 @@
-<script setup lang="ts">
-import { nativeFetch } from "@/helpers/api";
-import { getPersistData, setPersistData } from "@/helpers/cookie";
-import Forum from "@/models/Forum";
+<script setup>
+import useStore from '@/composables/store';
 
-const forums = useState<Forum[]>('forums')
-
-onMounted(() => {
-    if (getPersistData('forums-new')) {
-        forums.value = getPersistData('forums-new')
-    } else {
-        nativeFetch<{ forums: Forum[] }>('/forums/')
-            .then((data) => {
-                if (data.forums) {
-                    forums.value = data.forums
-                    setPersistData('forums-new', data.forums)
-                }
-            })
-            .catch((err) => { })
-    }
-})
-
+const store = useStore()
 </script>
 
 <template>
-    <div class="container" v-if="forums">
+    <div class="container" v-if="store.latestForums.length > 0">
         <strong>Top Forums: -</strong>
         <NuxtLink class="route outline-off2"
-            :to="'/topics/?forum=' + forum.name" v-for="forum of forums"
-            :key="forum.name">
+            :to="'/topics/?forum=' + forum.name"
+            v-for="forum of store.latestForums" :key="forum.name">
             <strong class="row shadow border-x pointer my-2 p-2"
                 :key="forum.name">
                 {{ forum.name.asTitle() }}
