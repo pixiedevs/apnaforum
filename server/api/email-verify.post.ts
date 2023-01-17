@@ -20,7 +20,7 @@ export default defineEventHandler(async e => {
     else if (body["req"] === 'verify') {
 
         const data = await sendData(path, body)
-            .catch((e) => {
+            .catch(() => {
                 e.node.res.end(JSON.stringify(Message.create("otp isn't valid.", "error")))
             })
         e.node.res.end(JSON.stringify(data))

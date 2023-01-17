@@ -43,7 +43,7 @@ const handleSignUp = (e) => {
                 throw new Error()
             }
         })
-        .catch((err) => {
+        .catch(() => {
             showToast("Unable to SignUp! try changing email, username or password.", "error", 10)
         })
 }
@@ -66,7 +66,7 @@ const handleVerification = (form) => {
                 throw new Error()
             }
         })
-        .catch((err) => {
+        .catch(() => {
             showToast("Unable to verify! try checking email, username or otp.", "error", 10)
         })
 }

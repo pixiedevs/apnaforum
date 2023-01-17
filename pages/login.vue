@@ -27,7 +27,7 @@ const handleLogin = (e) => {
                 throw new Error()
             }
         })
-        .catch((err) => {
+        .catch(() => {
             showToast("Wrong username or password!", "error", 5)
         })
 }

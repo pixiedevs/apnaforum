@@ -16,7 +16,7 @@ export function voteService(action: string, to: string, toId: string, liked: boo
                 throw new Error()
             }
         })
-        .catch((e) => {
+        .catch(() => {
             showToast(`Unable to perform task`, "error", 5)
             setTimeout(() => {
                 onError()
@@ -36,7 +36,7 @@ function deleteService(to: string, query: object, id: number, onSuccess?: Functi
                     }
                 }
             }
-        }).catch((err) => {
+        }).catch(() => {
             showToast(`Unable to delete ${to}!`, "error", 5)
         });
 }
@@ -83,7 +83,7 @@ export function addService(to: string, form: FormData, onSuccess: Function) {
                 }, 500);
             }
             else throw new Error()
-        }).catch((err) => {
+        }).catch(() => {
             showToast(`Unable to add ${to}!`, "error", 5)
         })
 }
@@ -119,7 +119,7 @@ export function ifPersistComments(slug: string, page: number, onSuccss: Function
                     }
                     onError(time)
                 })
-                .catch((err) => {
+                .catch(() => {
                     onError(time)
                 });
         } else {
@@ -141,7 +141,6 @@ export function markCommentUserful(slug: string, commentId: number, remove: bool
                 }
             }
         })
-        .catch((err) => {
-            console.log(err);
+        .catch(() => {
         });
 }

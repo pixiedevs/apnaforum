@@ -50,7 +50,7 @@ const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?
 				}
 			}
 		})
-		.catch((err) => { pendingComments.value = false, errorComments.value = true })
+		.catch(() => { pendingComments.value = false, errorComments.value = true })
 }
 const fetchCommentDataIfNeed = () => {
 	pendingComments.value = true

@@ -84,8 +84,8 @@ export const handleLogout = (syncToBackend = false) => {
 
     if (syncToBackend) {
         dataFetch('/logout/')
-            .then((res) => { })
-            .catch((err) => { });
+            .then(() => { })
+            .catch(() => { });
     }
     deleteUserCookies()
     authUser.value.username = ''
@@ -101,7 +101,7 @@ export const updateAuthUser = () => {
             authUser.value.auth = data.user.auth
             authUser.value.username = data.user.username
             authUser.value.isa = data.user.isa
-        }).catch((err) => {
+        }).catch(() => {
             handleLogout()
         })
 }
@@ -111,6 +111,6 @@ export const doReport = (name: string, id: string, type: string) => {
     nativeFetch('/report/')
         .then((data) => {
         })
-        .catch((err) => {
+        .catch(() => {
         })
 }

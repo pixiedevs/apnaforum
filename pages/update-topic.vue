@@ -43,7 +43,7 @@ const handleAddTopic = (e: FormDataEvent) => {
             else
                 throw new Error()
         })
-        .catch((err) => {
+        .catch(() => {
             showToast("Unable to update topic!", "error", 5)
         })
 }
