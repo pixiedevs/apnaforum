@@ -48,11 +48,8 @@ const handleSignUp = (e) => {
         })
 }
 const handleVerification = (form) => {
-    if (form.get('otp')) {
-        form.set('req', 'verify')
-    }
     startLoading(2)
-    usePostFetch(`/api/email-verify/`, JSON.stringify(formDataToObj(form)), 'POST')
+    usePostFetch(`/api/email-verify/`, form, 'POST')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 5)
@@ -84,10 +81,9 @@ const handleVerification = (form) => {
             <form @submit.prevent="handleSignUp">
                 <div class="container">
                     <label>Email: <input type="email" name='email' required
-                            value="pyadav7787@gmail.com"
                             placeholder="This email will be used at verification." /></label>
                     <label>Username: <input type="text" name='username'
-                            value="deepak" required /></label>
+                            required /></label>
                     <div v-if="!emailVerify">
                         <label>Password: <input type="password" name='password'
                                 required /></label>
@@ -99,12 +95,12 @@ const handleVerification = (form) => {
                                 name='lastName' /></label>
                     </div>
                     <div v-else>
-                        <input type="text" name='req' class="hidden"
-                            :value="otpSent ? 'verify' : 'send'" hidden />
                         <label v-if="otpSent">OTP: <input type="number"
                                 minlength="5" maxlength="5"
                                 name='otp' /></label>
                     </div>
+                    <input type="text" name='req' class="hidden"
+                        :value="otpSent ? 'verify' : 'send'" hidden />
 
                     <div class="d-flex justify-content-around">
                         <button class="small" type='submit'

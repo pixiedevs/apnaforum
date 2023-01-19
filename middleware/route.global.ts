@@ -1,6 +1,6 @@
 import { updateAuthUser } from "@/helpers/api"
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(() => {
     const authUser = useAuthUser()
     const leftSidebar = useState('leftSidebar')
 
