@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TopicCardList from "@/components/TopicCardList.vue"
-import { dataFetch } from "@/helpers/api";
+import { dataFetch, nativeFetch } from "@/helpers/api";
 import { TopicBase } from "@/models/Topic";
 import PaginationPage, { defaultPaginationPage } from "@/models/PaginationPage";
 
@@ -16,16 +16,22 @@ const page = ref(route.query.page ? Number(route.query.page) : 1)
 
 const fetchData = () => {
 	pending.value = true
+	let query = route.query
 
-	dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', route.query)
+	dataFetch<{ topics: TopicBase[], page: PaginationPage }>('/topics/', query)
 		.then((res) => {
 			topicsData.value = res.data.value
 			page.value = res.data.value.page.curr
-			if (route.query.page !== page.toString()) {
-				route.query.page = page.value.toString()
-				router.push({ query: route.query })
+
+			if (query.page !== page.value.toString()) {
+				query.page = page.value.toString()
+				if (query.page === '1')
+					delete query.page
+				router.push({ query: query })
 			}
+
 			pending.value = false
+
 
 		}).catch(() => { pending.value = false });
 }
@@ -34,12 +40,14 @@ fetchData()
 
 function prevPage() {
 	page.value--
+	router.replace({ query: { page: page.value } })
 }
 function nextPage() {
 	page.value++
+	router.replace({ query: { page: page.value } })
 }
 
-watch([route, page], () => {
+watch(route, () => {
 	fetchData()
 })
 
@@ -54,21 +62,28 @@ watch([route, page], () => {
 
 		<section>
 
-			<div class="container hm-80v d-flex flex-column t-delay-200"
-				v-if="!pending">
-				<TopicCardList class="flex-fill" :topics="topicsData.topics" />
+			<div v-if="pending" class="loading loading-center text-center">
+				Loading...
+			</div>
+			<div v-else class="container hm-80v d-flex flex-column t-delay-200">
 
 				<div class="d-flex justify-content-around">
-					<button :disabled="!topicsData.page.has_prev"
+					<button class="small" :disabled="!topicsData.page.has_prev"
 						@click="prevPage()">Prev
 						Page</button>
-					<div class="px-5"></div>
-					<button :disabled="!topicsData.page.has_next"
+
+					<div class="px-5">
+						<button class="small" @click="$router.push({ query: { page } })"
+							:disabled="Object.keys(route.query).length == 0">clear
+							query</button>
+					</div>
+
+					<button class="small" :disabled="!topicsData.page.has_next"
 						@click="nextPage()">Next
 						Page</button>
 				</div>
-			</div>
-			<div v-else class="loading loading-center text-center"> Loading...
+
+				<TopicCardList class="flex-fill" :topics="topicsData.topics" />
 			</div>
 
 		</section>

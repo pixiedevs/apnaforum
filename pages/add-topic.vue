@@ -35,7 +35,7 @@ const handleAddTopic = (e) => {
                     <label for="add-topic-name">Name: </label>
                     <input type="text" name="topic-name" id="add-topic-name"
                         placeholder="Topic Name" maxlength="140" minlength="10"
-                        required>
+                        required1>
                     <label for="add-topic-forum">Forum: </label>
                     <input type="text" name="topic-forum" id="add-topic-forum"
                         pattern="^[A-Za-z]+" maxlength="50" minlength="3"
@@ -50,7 +50,8 @@ const handleAddTopic = (e) => {
                         </div>
                     </label>
                     <textarea name="topic-body" v-model="topicBody" class="mb-0"
-                        id="add-topic-body" minlength="50" required></textarea>
+                        id="add-topic-body" minlength="50" required1></textarea>
+                        <AddTags />
                     <details>
                         <summary class="editor-help pointer">Help
                         </summary>

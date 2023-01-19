@@ -79,6 +79,7 @@ body {
   left: 50%;
   transform: translate(-50%, -300%);
   transition: .1s ease;
+  z-index: 99999;
 }
 
 .skip-to-main:active,
@@ -99,6 +100,7 @@ main {
   margin: 0;
   margin-left: 250px;
   flex: 1 1 auto !important;
+  /* max-width: 1000px; */
 }
 
 #view>.aside-right,

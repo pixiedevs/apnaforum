@@ -35,7 +35,7 @@ onMounted(() => {
 
 const handleAddTopic = (e: FormDataEvent) => {
     let form = new FormData(e.target as HTMLFormElement)
-    usePostFetch('/topics/update/', form)
+    usePostFetch('/topics/update/', form, 'PUT')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 0, data.slug ? [{ name: 'open', do: () => { navigateTo('/topics/' + data.slug) } }] : null)
@@ -68,6 +68,7 @@ const handleAddTopic = (e: FormDataEvent) => {
                 <input type="text" name="topic-name" id="add-topic-name"
                     placeholder="Topic Name" maxlength="140" minlength="10"
                     :value="topic.name" required>
+                <input type="text" name="topic-slug" :value="topic.slug" hidden>
                 <label for="add-topic-forum">Forum: </label>
                 <input type="text" name="topic-forum" id="add-topic-forum"
                     pattern="^[A-Za-z]+" maxlength="50" minlength="3"
@@ -84,6 +85,7 @@ const handleAddTopic = (e: FormDataEvent) => {
                 </label>
                 <textarea name="topic-body" v-model="topic.body" class="mb-0"
                     id="add-topic-body" minlength="50" required></textarea>
+                <AddTags :tags="topic.tags.join(', ')" />
                 <details>
                     <summary class="editor-help pointer">Help
                     </summary>

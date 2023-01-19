@@ -13,4 +13,5 @@ export interface Topic extends TopicBase {
     forumData: { name: string, moderator: string }
     answer?: number
     isLiked: boolean
+    tags: string[]
 };

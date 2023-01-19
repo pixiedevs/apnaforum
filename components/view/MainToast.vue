@@ -87,7 +87,7 @@ const doAction = (action: Function, toast: Toast) => {
     transition-delay: .4s;
 }
 
-.toast:hover,
+/* .toast:hover, */
 .toast.show {
     transform: translate(-50%, -50%);
 }

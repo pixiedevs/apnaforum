@@ -22,8 +22,7 @@ const doLike = (e) => {
     <input type="checkbox" v-model="likeModel" @click="doLike" id="topic-like"
         class='hidden' v-if="authUser.auth" />
     <label class='heart me-3' for="topic-like"></label>
-    <span
-        v-if="count">{{ likeCount + ' Like' + (likeCount > 1 ? 's' : '') }}</span>
+    <span>{{ likeCount + ' Like' + (likeCount > 1 ? 's' : '') }}</span>
 </template>
 
 <style scoped>
