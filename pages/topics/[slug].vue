@@ -149,7 +149,7 @@ const insertReply = (newReply) => {
 			</div>
 
 			<div class="card-group hover-light" id="comments"
-				v-else-if="topicData.topic.isactive">
+				v-else>
 				<!-- <ClientOnly> -->
 				<CommentComponent v-for="(comment, index) of comments"
 					:key="comment.id" :index="index" :replyCallback="addReplyCB"
