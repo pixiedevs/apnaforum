@@ -38,12 +38,8 @@ const fetchData = () => {
 
 fetchData()
 
-function prevPage() {
-	page.value--
-	router.replace({ query: { page: page.value } })
-}
-function nextPage() {
-	page.value++
+function toPage(inc: number) {
+	page.value += inc
 	router.replace({ query: { page: page.value } })
 }
 
@@ -67,20 +63,12 @@ watch(route, () => {
 			</div>
 			<div v-else class="container hm-80v d-flex flex-column t-delay-200">
 
-				<div class="d-flex justify-content-around">
-					<button class="small" :disabled="!topicsData.page.has_prev"
-						@click="prevPage()">Prev
-						Page</button>
+				<div class="d-flex justify-content-between">
+					<button :disabled="!topicsData.page.has_prev" class="small"
+						@click="toPage(-1)">Prev Page</button>
 
-					<div class="px-5">
-						<button class="small" @click="$router.push({ query: { page } })"
-							:disabled="Object.keys(route.query).length == 0">clear
-							query</button>
-					</div>
-
-					<button class="small" :disabled="!topicsData.page.has_next"
-						@click="nextPage()">Next
-						Page</button>
+					<button :disabled="!topicsData.page.has_next" class="small"
+						@click="toPage(1)">Next Page</button>
 				</div>
 
 				<TopicCardList class="flex-fill" :topics="topicsData.topics" />

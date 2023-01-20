@@ -39,7 +39,7 @@ onMounted(() => {
         </main>
 
         <!-- <ClientOnly> -->
-        <label for="rightAside-toggler"><span class="shadow py-5"
+        <label for="rightAside-toggler"><span class="shadow-active py-5"
                 title="Toggle sidebar">&gt;</span>
         </label>
         <input id="rightAside-toggler" type="checkbox" class="hidden"

@@ -584,12 +584,15 @@ code::before {
   /* Firefox */
 }
 
+.shadow-active,
 .shadow {
   box-shadow: 2px 2px 5px #00000055,
-    inset -5px -5px 5px #00011122,
-    inset 5px 5px 5px #00011122;
+  inset -5px -5px 5px #00011122,
+  inset 5px 5px 5px #00011122;
 }
 
+
+.shadow-active:active,
 .shadow:hover {
   box-shadow: inset -5px -5px 5px #00011122,
     inset 5px 5px 5px #00011122;
