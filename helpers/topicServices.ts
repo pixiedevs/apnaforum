@@ -107,7 +107,7 @@ export function ifPersistComments(slug: string, page: number, onSuccss: Function
     let time = new Date().toString();
     try {
         if (getPersistData(`${slug}=${page}`, false)) {
-            nativeFetch<{ time: string }>(`/topics/${slug}/`, { res: time, page: page }, 'GET')
+            nativeFetch<{ time: string }>(`/topics/${slug}/`, { res: 'time', page: page }, 'GET')
                 .then((res) => {
                     const data = getPersistData(`${slug}=${page}`, false)
 
