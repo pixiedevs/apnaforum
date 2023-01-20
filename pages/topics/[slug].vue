@@ -29,7 +29,7 @@ const replyTo = useState<[string, string, string, number]>('replyTo', () => ['',
 const { data: topicData, pending, error } = dataFetch<{ topic: Topic }>(`/topics/${route.params.slug}/`)
 
 const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?: number) => {
-	let query = onlyReplies ? { res: "replies", "comment-id": id } : { "res": 'comments' }
+	let query = onlyReplies ? { res: "replies", "comment-id": id } : { res: 'comments' }
 	query["page"] = page
 
 	nativeFetch<{ comments: Comment[], replies: Reply[] }>(`/topics/${route.params.slug}/`, query, 'GET')
