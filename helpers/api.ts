@@ -14,8 +14,8 @@ export const getContactTypes = () => (CONTACT_TYPES)
 
 export const is_bot = () => /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)
 
-const _getFullPathAndHeader = (path = '/', auth = true) => {
-    const runtimeConfig = useRuntimeConfig()
+const _getUrlAndHeader = (path = '/', auth = true) => {
+    const config = useRuntimeConfig()
     let token = '';
     if (path.charAt(0) !== '/') path = '/' + path;
 
@@ -30,17 +30,24 @@ const _getFullPathAndHeader = (path = '/', auth = true) => {
         "Accept": "*/*",
         "Authorization": 'Bearer ' + token
     } : {}
+    const url = new URL(path.startsWith('/api') ? document.location.origin + path : config.public.apiBase + "/api" + path)
+    url.searchParams.set('res_type', 'api')
 
-    return { path: (path.startsWith('/api') ? path : runtimeConfig.public.apiBase + "/api" + path), header: header }
+    return { url, header }
+}
+
+function _assignUrlQuery(url: URL, query: object) {
+    Object.entries(query).forEach(q => {
+        url.searchParams.set(q[0], q[1])
+    })
 }
 
 export const usePostFetch = async (path = '/', form: FormData, method: string = 'POST', auth = true) => {
-    const options = _getFullPathAndHeader(path, auth)
+    const options = _getUrlAndHeader(path, auth)
 
     options.header["Content-Type"] = "application/json"
-    // options.header["Content-Type"] = (typeof form === 'string') ? "application/json" : "multipart/form-data"
 
-    const r = await fetch(`${options.path}?res_type=api`, {
+    const r = await fetch(options.url, {
         method: method,
         body: JSON.stringify(formDataToObj(form)),
         credentials: "same-origin",
@@ -51,13 +58,10 @@ export const usePostFetch = async (path = '/', form: FormData, method: string = 
 
 /* The data string must be start with & */
 export const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
-    const options = _getFullPathAndHeader(path, auth)
-    let query = ""
-    Object.entries(queryObj).forEach(q => {
-        query = query.concat(`&${q[0]}=${q[1]}`)
-    })
+    const options = _getUrlAndHeader(path, auth)
+    _assignUrlQuery(options.url, queryObj)
 
-    return useFetch<T>(`${options.path}?res_type=api${query}`, {
+    return useFetch<T>(options.url.toString(), {
         method: method,
         credentials: 'same-origin',
         headers: options.header
@@ -66,13 +70,10 @@ export const dataFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = t
 
 /* The data string must be start with & */
 export const nativeFetch = <T>(path = '/', queryObj = {}, method = 'GET', auth = true) => {
-    const options = _getFullPathAndHeader(path, auth)
-    let query = ""
-    Object.entries(queryObj).forEach(q => {
-        query = query.concat(`&${q[0]}=${q[1]}`)
-    })
+    const options = _getUrlAndHeader(path, auth)
+    _assignUrlQuery(options.url, queryObj)
 
-    return $fetch<T>(`${options.path}?res_type=api${query}`, {
+    return $fetch<T>(options.url.toString(), {
         method: method,
         credentials: 'same-origin',
         headers: options.header

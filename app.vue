@@ -21,14 +21,11 @@
 </template>
 
 <script setup>
-import '@/assets/css/mili.css';
-import '@/assets/css/style.css';
-
-import Navbar from "@/components/Navbar.vue";
-import HeadTags from "@/components/HeadTags.vue";
-import MainToast from "@/components/view/MainToast.vue";
-import Footer from "@/components/Footer.vue";
 import "@/helpers/mixinGlobals"
+import Navbar from "@/components/view/Navbar.vue";
+import HeadTags from "@/components/view/HeadTags.vue";
+import MainToast from "@/components/view/MainToast.vue";
+import Footer from "@/components/view/Footer.vue";
 
 useHead({
   htmlAttrs: {
@@ -58,6 +55,9 @@ useHead({
 </script>
 
 <style>
+@import "~/assets/css/mili.css";
+@import "~/assets/css/style.css";
+
 .page-enter-active,
 .page-leave-active {
   transition: all .2s;

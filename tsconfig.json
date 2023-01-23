@@ -24,6 +24,9 @@
             "@/server/utils/*": [
                 "server/utils/*"
             ],
+            "/icons/*": [
+                "public/icons/*"
+            ],
         },
         "allowJs": true
     },

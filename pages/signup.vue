@@ -14,12 +14,12 @@ const otpSent = ref(false)
 const handleSignUp = (e) => {
     const form = new FormData(e.target)
 
+    if (emailVerify.value) return handleVerification(form)
+
     if (form.get('username').length < 5) {
         showToast("Username must be more or equal to 5 letters.", "warning", 5)
         return
     }
-
-    if (emailVerify.value) return handleVerification(form)
 
     if (form.get('password').length < 8) {
         showToast("Password must be more or equal to 8 letters.", "warning", 5)
@@ -43,13 +43,14 @@ const handleSignUp = (e) => {
                 throw new Error()
             }
         })
-        .catch(() => {
+        .catch((e) => {
+            console.log(e);
             showToast("Unable to SignUp! try changing email, username or password.", "error", 10)
         })
 }
 const handleVerification = (form) => {
     startLoading(2)
-    usePostFetch(`/api/email-verify/`, form, 'POST')
+    usePostFetch('/api/email-verify/', form, 'POST')
         .then((data) => {
             if (data.message) {
                 showToast(data.message.desc, data.message.tag, 5)
@@ -63,7 +64,8 @@ const handleVerification = (form) => {
                 throw new Error()
             }
         })
-        .catch(() => {
+        .catch((e) => {
+            console.log(e);
             showToast("Unable to verify! try checking email, username or otp.", "error", 10)
         })
 }
@@ -75,9 +77,12 @@ const handleVerification = (form) => {
 
         <div class="heading text-center">
             <h1>SignUp</h1>
+            <img v-if="emailVerify" src="/icons/personal_email.svg"
+                alt="email image" class="smaller" loading="lazy">
+            <img v-else src="/icons/add_user.svg" alt="add user" class="smaller"
+                loading="lazy">
         </div>
-
-        <div id="signup" class="py-5 px-2 pb-0 mx-auto mt-5">
+        <div id="signup" class="px-2 pb-0 mx-auto">
             <form @submit.prevent="handleSignUp">
                 <div class="container">
                     <label>Email: <input type="email" name='email' required
@@ -95,17 +100,16 @@ const handleVerification = (form) => {
                                 name='lastName' /></label>
                     </div>
                     <div v-else>
-                        <label v-if="otpSent">OTP: <input type="number"
-                                minlength="5" maxlength="5"
-                                name='otp' /></label>
+                        <label>OTP: <input type="number" minlength="5"
+                                maxlength="5" name='otp' /></label>
                     </div>
                     <input type="text" name='req' class="hidden"
                         :value="otpSent ? 'verify' : 'send'" hidden />
 
-                    <div class="d-flex justify-content-around">
-                        <button class="small" type='submit'
+                    <div class="d-flex justify-content-around flex-wrap">
+                        <button type='submit'
                             v-text="emailVerify ? (otpSent ? 'verify' : 'send otp') : 'SignUp'"></button>
-                        <button class="small" type="button"
+                        <button type="button"
                             @click="router.back()">Cancel</button>
                     </div>
                     <details>
@@ -118,13 +122,14 @@ const handleVerification = (form) => {
                 </div>
             </form>
             <p class="text-center">* Go for *</p>
-            <div class="text-center mb-4">
-                <NuxtLink :to="'/login/'"><button type="button">login</button>
+            <div
+                class="d-flex justify-content-center col-gap-1 row-gap-1 flex-wrap">
+                <NuxtLink :to="'/login/'">
+                    <button type="button">login</button>
                 </NuxtLink>
-                <button type="button" class="ms-2"
-                    @click="emailVerify = !emailVerify"
+                <button type="button" @click="emailVerify = !emailVerify"
                     v-text="emailVerify ? 'SignUp' : 'Email Verification'"></button>
-                <button v-if="emailVerify" type="button" class="ms-2"
+                <button v-if="emailVerify" type="button"
                     @click="otpSent = !otpSent"
                     v-text="otpSent ? 'get otp' : 'verify otp'"></button>
             </div>

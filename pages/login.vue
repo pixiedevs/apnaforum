@@ -14,7 +14,7 @@ const handleLogin = (e) => {
     const formData = new FormData(e.target)
 
     startLoading(2)
-    usePostFetch(`/token/`, formData, 'POST')
+    usePostFetch(`/token/`, formData, 'POST', false)
         .then((data) => {
             if (data.access) {
                 setCookieValue("sessiona", data.access, 5)
@@ -41,21 +41,29 @@ const handleLogin = (e) => {
             <h1>Login</h1>
         </div>
 
-        <div id="login" class="rounded py-5 px-2 pb-0 mx-auto mt-5">
+        <div id="login" class="rounded px-2 pb-0 m-auto">
+
             <form @submit.prevent="handleLogin">
                 <div class="container">
-                    <label>Username: <input type="text"
-                            name='username' required/></label>
-                    <label>Password: <input type="password"
-                            name='password' required/></label>
+                    <div class="text-center">
+                        <img src="/icons/login.svg" class="medium"
+                            alt="login image" loading="lazy">
+                    </div>
+                    <label>Username: <input type="text" name='username'
+                            required /></label>
+                    <label>Password: <input type="password" name='password'
+                            required /></label>
 
-                    <div class="d-flex justify-content-around">
-                        <button class="small" type='submit'>Login</button>
-                        <button class="small" type="button"
+                    <div class="d-flex justify-content-around flex-wrap">
+                        <button type='submit'>Login</button>
+                        <button type="button"
                             @click="router.back()">Cancel</button>
                     </div>
-                    <p class="text-center mt-3">* New user *</p>
-                    <div class="text-center mt-3"><NuxtLink :to="'/signup/'"><button class="small" type="button">Signup</button></NuxtLink></div>
+                    <p class="text-center mt-3">* Create Account *</p>
+                    <div class="text-center mt-3">
+                        <NuxtLink :to="'/signup/'"><button
+                                type="button">Signup</button></NuxtLink>
+                    </div>
                 </div>
             </form>
         </div>

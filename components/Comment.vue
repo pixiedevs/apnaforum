@@ -55,12 +55,11 @@ const doCallback = () => {
 
                 <small class="card-details pe-4">
 
+                    <NuxtLink :to="`/u/${comment.authorUsername}/`">
+                        <span class="card-author px-3">{{ comment.authorUsername }}</span>
+                    </NuxtLink>
                     <span class="card-author px-3">{{ comment.repliesCount }}
                         {{ 'Repl' + (comment.repliesCount > 1 ? 'ies' : 'y') }}</span>
-                    <NuxtLink :to="`/u/${comment.authorUsername}/`">
-                        <span
-                            class="card-author px-3">{{ comment.authorUsername }}</span>
-                    </NuxtLink>
                     <span class="card-time">{{ comment.time.asTime() }}</span>
                 </small>
             </div>
@@ -73,7 +72,7 @@ const doCallback = () => {
         <button v-if="comment.repliesCount != comment.replies?.length"
             class="button-clear small ms-auto mb-2"
             title="Currently this option isn't available."
-            @click="moreReplies(null, true, comment.id, index)">Load
+            @click="moreReplies(true, comment.id, index)">Load
             more</button>
 
     </div>

@@ -88,48 +88,6 @@ export function addService(to: string, form: FormData, onSuccess: Function) {
         })
 }
 
-export function persistComments(persist_key: string, values: any, time: string) {
-    const key = setPersistData(persist_key, { comments: values, time: time }, 0, false)
-    let keys: string[] = JSON.parse(sessionStorage.getItem("topic__keys")) ?? []
-    if (key)
-        keys.push(key.toString())
-    else
-        sessionStorage.clear()
-
-    if (keys.length > 5) {
-        sessionStorage.removeItem(keys[0])
-        keys.shift()
-    }
-    sessionStorage.setItem("topic__keys", JSON.stringify(keys))
-}
-
-export function ifPersistComments(slug: string, page: number, onSuccss: Function, onError: Function) {
-    let time = new Date().toString();
-    try {
-        if (getPersistData(`${slug}=${page}`, false)) {
-            nativeFetch<{ time: string }>(`/topics/${slug}/`, { res: 'time', page: page }, 'GET')
-                .then((res) => {
-                    const data = getPersistData(`${slug}=${page}`, false)
-
-                    time = res.time
-
-                    if (res.time === data.time) {
-                        onSuccss(data)
-                        return;
-                    }
-                    onError(time)
-                })
-                .catch(() => {
-                    onError(time)
-                });
-        } else {
-            onError(time)
-        }
-    } catch (er) {
-        onError(time)
-    }
-}
-
 export function markCommentUserful(slug: string, commentId: number, remove: boolean, onSuccess: Function) {
 
     nativeFetch<{ message: Message, id: number }>(`/comments/markuseful/`, { "comment-id": commentId, "topic-id": slug }, remove ? 'DELETE' : 'GET')

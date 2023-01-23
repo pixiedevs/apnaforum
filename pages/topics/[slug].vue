@@ -8,9 +8,8 @@ import { dataFetch, nativeFetch } from "@/helpers/api";
 import { Topic } from "@/models/Topic";
 import Comment from "@/models/Comment";
 import Reply from "@/models/Reply";
-import LoadingPage from "@/components/view/LoadingPage.vue";
-import TopicErrorPage from "@/components/view/TopicErrorPage.vue";
-import { persistComments, ifPersistComments, markCommentUserful } from "@/helpers/topicServices";
+import { markCommentUserful } from "@/helpers/topicServices";
+import PaginationPage from "@/models/PaginationPage";
 
 const route = useRoute()
 
@@ -18,9 +17,11 @@ const comments = useState<Comment[]>('commentsData', () => [])
 const pendingComments = useState('pendingComments', () => true)
 const errorComments = useState('errorComments', () => false)
 let isInit = true
-let persist = true
-let page = /* route.query.page ? Number(route.query.page) : */ 1
-
+const page = ref(route.query.page ? Number(route.query.page) : 1)
+const paginationData = ref<PaginationPage>()
+/* 
+	Add only 10 Observer add 5 until comments completed
+ */
 
 const floatReply = useState('floatReply', () => false)
 /* replyTo will save [reply of comment-id, reply of type, trimmed body, and base comment-id] */
@@ -28,16 +29,17 @@ const replyTo = useState<[string, string, string, number]>('replyTo', () => ['',
 
 const { data: topicData, pending, error } = dataFetch<{ topic: Topic }>(`/topics/${route.params.slug}/`)
 
-const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?: number) => {
+const fetchCommentData = (onlyReplies = false, id?: number, index?: number) => {
 	let query = onlyReplies ? { res: "replies", "comment-id": id } : { res: 'comments' }
-	query["page"] = page
+	query["page"] = page.value
 
-	nativeFetch<{ comments: Comment[], replies: Reply[] }>(`/topics/${route.params.slug}/`, query, 'GET')
+	nativeFetch<{ comments: Comment[], page: PaginationPage, replies: Reply[] }>(`/topics/${route.params.slug}/`, query, 'GET')
 		.then((data) => {
 			if (onlyReplies) {
 				comments.value[index].replies = data.replies
 			} else {
-				comments.value = data.comments
+				comments.value.push(...data.comments)
+				paginationData.value = data.page
 				pendingComments.value = false
 				if (isInit && route.hash) {
 					setTimeout(() => {
@@ -45,25 +47,11 @@ const fetchCommentData = (time: string, onlyReplies = false, id?: number, index?
 					}, 500);
 					isInit = false
 				}
-				if (persist) {
-					persistComments(`${route.params.slug}=${page}`, data.comments, time)
-				}
 			}
 		})
 		.catch(() => { pendingComments.value = false, errorComments.value = true })
 }
-const fetchCommentDataIfNeed = () => {
-	pendingComments.value = true
 
-	if (persist) {
-		ifPersistComments(route.params.slug as string, page,
-			(data) => {
-				comments.value = data.comments
-				pendingComments.value = false
-				return;
-			}, fetchCommentData)
-	}
-}
 
 const addReplyCB = (id: string, type: string, body: string, commentId: number) => {
 	replyTo.value = [id, type, body, commentId]
@@ -72,7 +60,12 @@ const addReplyCB = (id: string, type: string, body: string, commentId: number) =
 
 onMounted(() => {
 	if (!error.value)
-		fetchCommentDataIfNeed()
+		fetchCommentData()
+})
+
+watch(page, () => {
+	if (!error.value)
+		fetchCommentData()
 })
 
 const markUserful = (commentId: number) => {
@@ -98,6 +91,16 @@ const insertReply = (newReply) => {
 	})
 }
 
+function onIntersect(e, o) {
+
+	if (e.intersectionRatio === 1) {
+		if (paginationData.value.has_next) {
+			page.value++
+		} else if (paginationData.value.last === page.value) {
+			o.disconnect()
+		}
+	}
+}
 
 </script>
 
@@ -148,8 +151,7 @@ const insertReply = (newReply) => {
 				<h2>Unable to get comments!</h2>
 			</div>
 
-			<div class="card-group hover-light" id="comments"
-				v-else>
+			<div class="card-group hover-light" id="comments" v-else>
 				<!-- <ClientOnly> -->
 				<CommentComponent v-for="(comment, index) of comments"
 					:key="comment.id" :index="index" :replyCallback="addReplyCB"
@@ -158,6 +160,9 @@ const insertReply = (newReply) => {
 					:topicIsActive="topicData.topic.isactive"
 					:author="topicData.topic.authorUsername" :comment="comment"
 					:markUserful="markUserful" />
+
+				<Observer :id="'comments-datafetch'"
+					:onIntersect="onIntersect" />
 				<!-- </ClientOnly> -->
 			</div>
 

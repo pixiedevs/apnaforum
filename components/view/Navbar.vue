@@ -9,7 +9,7 @@
             <div class="middle">
             </div>
             <input type="checkbox" name="navbar-toggler" class="hidden navbar-toggler" id="navbar-toggler" />
-            <label class="navbar-toggler toggler" for="navbar-toggler" @click="leftSidebar = !leftSidebar">|||</label>
+            <label class="navbar-toggler toggler" for="navbar-toggler" @click="leftSidebar = !leftSidebar"></label>
         </div>
     </nav>
 </template>

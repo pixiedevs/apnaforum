@@ -177,12 +177,24 @@ main {
 }
 
 .navbar .navbar-toggler {
-  width: 3rem;
-  height: 3rem;
-  cursor: pointer;
   margin: 0;
   padding-left: 5px;
-  transform: scale(1.2);
+  padding-right: 5px;
+  cursor: pointer;
+  transform: scale(1.2) translateY(2%);
+}
+
+.navbar .navbar-toggler::before {
+  content: '';
+  padding-left: 2px;
+  border-left: 5px solid currentColor;
+}
+
+.navbar .navbar-toggler::after {
+  content: '';
+  padding-left: 2px;
+  border-left: 2px solid currentColor;
+  border-right: 2px solid currentColor;
 }
 
 .navbar .navbar-toggler:active {
@@ -587,8 +599,8 @@ code::before {
 .shadow-active,
 .shadow {
   box-shadow: 2px 2px 5px #00000055,
-  inset -5px -5px 5px #00011122,
-  inset 5px 5px 5px #00011122;
+    inset -5px -5px 5px #00011122,
+    inset 5px 5px 5px #00011122;
 }
 
 
@@ -806,9 +818,11 @@ form.strict:invalid button[type=submit] {
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
+
 [type="radio"].fancy+label:before {
   border-radius: 50%;
 }
+
 [type="radio"].fancy:checked+label:after {
   border-radius: 50%;
 }
@@ -827,6 +841,21 @@ form.strict:invalid button[type=submit] {
   transform: scale(1);
 }
 
+img {
+  max-width: min(500px, 90%);
+}
+
+img.medium {
+  width: 40rem;
+}
+
+img.small {
+  width: 20rem;
+}
+
+img.smaller {
+  width: 15rem;
+}
 
 @media screen and (max-width: 1200px) {
   #view>.aside-left {

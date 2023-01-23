@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import TopicCardList from "@/components/TopicCardList.vue"
-import ErrorPage from "@/components/view/ErrorPage.vue";
-import LoadingPage from "@/components/view/LoadingPage.vue";
 import { dataFetch } from "@/helpers/api";
 import { TopicBase } from "@/models/Topic";
 
